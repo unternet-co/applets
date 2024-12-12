@@ -30,6 +30,9 @@ function hasPackageJson(dir) {
 // Build a single applet
 async function buildApplet(appletPath, appletName) {
   try {
+    process.stdout.write(`Installing dependencies for ${appletName}...`);
+    await execAsync('npm install', { cwd: appletPath });
+    console.log(`Done!`);
     process.stdout.write(`Building ${appletName}...`);
     await execAsync('npm run build', { cwd: appletPath });
     console.log(`Done!`);
