@@ -1,6 +1,7 @@
 {
-  "name": "My Applet",
-  "description": "",
+  "name": "Web",
+  "short_name": "Web",
+  "description": "Search the web.",
   "icons": [
     {
       "src": "icon-128x128.png"
