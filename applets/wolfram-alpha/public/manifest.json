@@ -1,0 +1,24 @@
+{
+  "name": "Wolfram Alpha",
+  "short_name": "Wolfram Alpha",
+  "description": "Get computational knowledge from Wolfram Alpha.",
+  "version": "1.0",
+  "icons": [
+    {
+      "src": "icon-128x128.png"
+    }
+  ],
+  "actions": [
+    {
+      "id": "get_knowledge",
+      "description": "Get computational knowledge from Wolfram Alpha.",
+      "display": "none",
+      "params": {
+        "query": {
+          "type": "string",
+          "description": "A query to know about something or a calculation."
+        }
+      }
+    }
+  ]
+}
