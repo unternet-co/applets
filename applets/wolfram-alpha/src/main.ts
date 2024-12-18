@@ -16,7 +16,7 @@ context.setActionHandler("get_knowledge", async ({ query }) => {
 context.ondata = (event) => {
   const fragment = document.createDocumentFragment();
 
-  // Every result from Wolfram Alpha comes with a set of pods, which represent different categories of information related to the query. Each pod has a title and a set of subpods. Learn more about the API here: https://products.wolframalpha.com/api/documentation
+  // Every result from Wolfram Alpha comes with a set of pods, which represent different categories of information related to the query. Each pod has a title and a set of subpods.
   // By default, it only shows the subpods that contain images as results.
 
   event.data.result.queryresult.pods.forEach((pod: WolframAlphaPod) => {
