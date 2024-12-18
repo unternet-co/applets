@@ -1,0 +1,23 @@
+{
+  "name": "Weather",
+  "short_name": "Weather",
+  "description": "Get the weather forecast for your location today.",
+  "icons": [
+    {
+      "src": "icon-128x128.png"
+    }
+  ],
+  "actions": [
+    {
+      "id": "get_weather",
+      "description": "Get the weather forecast for your location today.",
+      "display": "none",
+      "params": {
+        "location": {
+          "type": "string",
+          "description": "A location"
+        }
+      }
+    }
+  ]
+}
