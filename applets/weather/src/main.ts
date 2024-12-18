@@ -51,33 +51,57 @@ context.ondata = (event) => {
   }));
 
   // HTML output
-  document.body.innerHTML = `
-  <p>Here is the forecast for <strong>${formatDate(
-    forecastData[0].time
-  )}</strong> in the location <strong>${locationName}</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Time</th>
-        <th>Temperature</th>
-        <th>Precipitation Probability</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${forecastData
-        .map(
-          (row) => `
-        <tr>
-          <td>${row.time.split("T")[1].slice(0, 5)}</td>
-          <td>${row.temperature}°C</td>
-          <td>${row.precipitationProbability}%</td>
-        </tr>
-      `
-        )
-        .join("")}
-    </tbody>
-  </table>
-`;
+  const fragment = document.createDocumentFragment();
+
+  // Create and append paragraph
+  const p = document.createElement("p");
+  p.textContent = "Here is the forecast for ";
+  const dateStrong = document.createElement("strong");
+  dateStrong.textContent = formatDate(forecastData[0].time);
+  p.appendChild(dateStrong);
+  p.appendChild(document.createTextNode(" in the location "));
+  const locationStrong = document.createElement("strong");
+  locationStrong.textContent = locationName;
+  p.appendChild(locationStrong);
+  fragment.appendChild(p);
+
+  // Create and append table
+  const table = document.createElement("table");
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+
+  ["Time", "Temperature", "Precipitation Probability"].forEach((headerText) => {
+    const th = document.createElement("th");
+    th.textContent = headerText;
+    headerRow.appendChild(th);
+  });
+
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  // Create tbody and populate rows
+  const tbody = document.createElement("tbody");
+  forecastData.forEach((row) => {
+    const tr = document.createElement("tr");
+
+    const timeCell = document.createElement("td");
+    timeCell.textContent = row.time.split("T")[1].slice(0, 5);
+
+    const tempCell = document.createElement("td");
+    tempCell.textContent = `${row.temperature}°C`;
+
+    const precipCell = document.createElement("td");
+    precipCell.textContent = `${row.precipitationProbability}%`;
+
+    tr.append(timeCell, tempCell, precipCell);
+    tbody.appendChild(tr);
+  });
+
+  table.appendChild(tbody);
+  fragment.appendChild(table);
+
+  // Update the document body in a single operation
+  document.body.replaceChildren(fragment);
 };
 
 /**
