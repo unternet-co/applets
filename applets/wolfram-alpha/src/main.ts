@@ -9,8 +9,10 @@ context.setActionHandler("get_knowledge", async ({ query }) => {
   const response = await fetch(`/api/wolfram/v2/query?appid=${appId}&input=${encodeURIComponent(query)}&output=json`);
   const data = await response.json();
 
+  const filteredData = filterDataWolframAlpha(data);
+
   // Final data for the context
-  context.data = { result: data };
+  context.data = { result: filteredData };
 });
 
 context.ondata = (event) => {
@@ -19,7 +21,7 @@ context.ondata = (event) => {
   // Every result from Wolfram Alpha comes with a set of pods, which represent different categories of information related to the query. Each pod has a title and a set of subpods.
   // By default, it only shows the subpods that contain images as results.
 
-  event.data.result.queryresult.pods.forEach((pod: WolframAlphaPod) => {
+  event.data.result.pods.forEach((pod: WolframAlphaPod) => {
     const section = document.createElement("section");
     const h2 = document.createElement("h2");
     h2.textContent = pod.title;
@@ -41,4 +43,35 @@ context.ondata = (event) => {
 
   // Update the document body in a single operation
   document.body.replaceChildren(fragment);
+};
+
+/**
+ * Filters the data from Wolfram Alpha API response to only include pods with subpods that have images.
+ * @TODO Check if there is a package with the Wolfram Alpha API types available.
+ *
+ * @param data The data to filter.
+ * @returns The filtered data.
+ */
+const filterDataWolframAlpha = (data: any) => {
+  const { queryresult } = data;
+
+  if (!queryresult?.pods) {
+    return { pods: [] };
+  }
+
+  return {
+    pods: queryresult.pods.map((pod: any) => ({
+      title: pod.title,
+      subpods: pod.subpods
+        .filter((subpod: any) => subpod.img)
+        .map((subpod: any) => ({
+          img: {
+            src: subpod.img.src,
+            alt: subpod.img.alt,
+            width: subpod.img.width,
+            height: subpod.img.height
+          }
+        }))
+    }))
+  };
 };
