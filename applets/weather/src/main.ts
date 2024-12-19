@@ -11,28 +11,18 @@ context.setActionHandler("get_weather", async ({ location }) => {
   }
 
   // Get the weather forecast for the location coordinates
-  const locationTodayWeather = await getLocationTodayWeather(
-    locationCoordinates.latitude,
-    locationCoordinates.longitude
-  );
-  if ("error" in locationTodayWeather) {
-    context.data = { error: locationTodayWeather.error };
+  const locationForecast = await getLocationForecast(locationCoordinates.latitude, locationCoordinates.longitude);
+  if ("error" in locationForecast) {
+    context.data = { error: locationForecast.error };
     return;
   }
-
-  // Variables for the data results in the context
-  const locationName = `${locationCoordinates.locationName}, ${locationCoordinates.locationAdmin1}, ${locationCoordinates.locationCountry}`;
-  const locationWeatherHourlyTime = locationTodayWeather.time;
-  const locationWeatherHourlyTemperature = locationTodayWeather.temperature;
-  const locationWeatherHourlyPrecipitationProbability = locationTodayWeather.precipitationProbability;
 
   // Final data for the context
   context.data = {
     weather: {
-      location: locationName,
-      time: locationWeatherHourlyTime,
-      temperature: locationWeatherHourlyTemperature,
-      precipitationProbability: locationWeatherHourlyPrecipitationProbability
+      location: `${locationCoordinates.locationName}, ${locationCoordinates.locationAdmin1}, ${locationCoordinates.locationCountry}`,
+      current: locationForecast.current,
+      daily: locationForecast.daily
     }
   };
 });
@@ -44,61 +34,37 @@ context.ondata = (event) => {
 
   // Setup variables for the HTML output
   const locationName = event.data.weather.location;
-  const forecastData = event.data.weather.time.map((time: string, index: number) => ({
+  const forecastDataCurrent = event.data.weather.current;
+  const forecastDataDaily = event.data.weather.daily.time.map((time: string, index: number) => ({
     time,
-    temperature: event.data.weather.temperature[index],
-    precipitationProbability: event.data.weather.precipitationProbability[index]
+    temperatureMax: event.data.weather.daily.temperature_2m_max[index],
+    temperatureMin: event.data.weather.daily.temperature_2m_min[index],
+    weatherCode: event.data.weather.daily.weather_code[index]
   }));
 
   // HTML output
   const fragment = document.createDocumentFragment();
 
-  // Create and append paragraph
+  // Today/Current Weather
   const p = document.createElement("p");
-  p.textContent = "Here is the forecast for ";
-  const dateStrong = document.createElement("strong");
-  dateStrong.textContent = formatDate(forecastData[0].time);
-  p.appendChild(dateStrong);
-  p.appendChild(document.createTextNode(" in the location "));
-  const locationStrong = document.createElement("strong");
-  locationStrong.textContent = locationName;
-  p.appendChild(locationStrong);
+  p.textContent = `Current Temperature: ${forecastDataCurrent.temperature_2m}°C - Today's weather in ${locationName}: `;
+  const span = document.createElement("span");
+  span.textContent = `High ${forecastDataDaily[0].temperatureMax}°C / Low ${forecastDataDaily[0].temperatureMin}°C - Current Weather Code: ${forecastDataCurrent.weather_code}`;
+  p.appendChild(span);
   fragment.appendChild(p);
 
-  // Create and append table
-  const table = document.createElement("table");
-  const thead = document.createElement("thead");
-  const headerRow = document.createElement("tr");
+  forecastDataDaily.forEach((forecastDataDaily, index) => {
+    // Avoid to show today's weather in the next days forecast
+    if (index === 0) {
+      return;
+    }
 
-  ["Time", "Temperature", "Precipitation Probability"].forEach((headerText) => {
-    const th = document.createElement("th");
-    th.textContent = headerText;
-    headerRow.appendChild(th);
+    const p = document.createElement("p");
+    p.textContent = `Day: ${getDayOfWeek(forecastDataDaily.time)} - Temperature: ${
+      forecastDataDaily.temperatureMax
+    }°C / ${forecastDataDaily.temperatureMin}°C - Weather Code: ${forecastDataDaily.weatherCode}`;
+    fragment.appendChild(p);
   });
-
-  thead.appendChild(headerRow);
-  table.appendChild(thead);
-
-  // Create tbody and populate rows
-  const tbody = document.createElement("tbody");
-  forecastData.forEach((row) => {
-    const tr = document.createElement("tr");
-
-    const timeCell = document.createElement("td");
-    timeCell.textContent = row.time.split("T")[1].slice(0, 5);
-
-    const tempCell = document.createElement("td");
-    tempCell.textContent = `${row.temperature}°C`;
-
-    const precipCell = document.createElement("td");
-    precipCell.textContent = `${row.precipitationProbability}%`;
-
-    tr.append(timeCell, tempCell, precipCell);
-    tbody.appendChild(tr);
-  });
-
-  table.appendChild(tbody);
-  fragment.appendChild(table);
 
   // Update the document body in a single operation
   document.body.replaceChildren(fragment);
@@ -133,17 +99,18 @@ const getLocationCoordinates = async (location: string) => {
 };
 
 /**
- * Gets the weather forecast for a location.
+ * Gets the location forecast from the weather API.
  * @param latitude The latitude of the location.
  * @param longitude The longitude of the location.
- * @returns The weather forecast for current day, or an error message.
+ * @returns The location forecast, or an error message.
  */
-const getLocationTodayWeather = async (latitude: number, longitude: number) => {
+const getLocationForecast = async (latitude: number, longitude: number) => {
   const weatherAPIUrl = "https://api.open-meteo.com/v1/forecast";
 
   const weatherResponse = await fetch(
-    `${weatherAPIUrl}?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation_probability&timezone=auto&forecast_days=1`
+    `${weatherAPIUrl}?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`
   );
+
   const weatherData = await weatherResponse.json();
 
   if (weatherData.error) {
@@ -151,21 +118,18 @@ const getLocationTodayWeather = async (latitude: number, longitude: number) => {
   }
 
   return {
-    time: weatherData.hourly.time,
-    temperature: weatherData.hourly.temperature_2m,
-    precipitationProbability: weatherData.hourly.precipitation_probability
+    current: weatherData.current,
+    daily: weatherData.daily
   };
 };
 
 /**
- * Formats a date string into a readable format.
+ * Gets the day of the week from a date string.
  * @param dateString The date string to format.
- * @returns The formatted date string.
+ * @returns The day of the week (short format).
  */
-const formatDate = (dateString: string) => {
+const getDayOfWeek = (dateString: string) => {
   const date = new Date(dateString);
-  const day = date.getDate();
-  const month = date.toLocaleString("en-US", { month: "long" });
-  const suffix = ["th", "st", "nd", "rd"][(day % 10 > 3 ? 0 : day % 10) * (day < 11 || day > 13 ? 1 : 0)] || "th";
-  return `${month} ${day}${suffix}`;
+  const day = date.toLocaleString("en-US", { weekday: "short" });
+  return day;
 };
