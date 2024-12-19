@@ -1,0 +1,17 @@
+{
+  "name": "Tarot Reader",
+  "short_name": "Tarot",
+  "description": "Draw tarot cards & predict your fortune.",
+  "icons": [
+    {
+      "src": "icon-128x128.png"
+    }
+  ],
+  "actions": [
+    {
+      "id": "draw",
+      "description": "Draw a tarot card.",
+      "display": "window"
+    }
+  ]
+}

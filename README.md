@@ -4,8 +4,12 @@ A collection of home-grown & community applets that can be used with any client 
 
 For more information, see the Web Applets repo: [unternet-co/web-applets/](https://github.com/unternet-co/web-applets/)
 
-- [Web](./web/README.md) - Search & parse the web.
-- [Weather](./weather/README.md) – Get a weather forecast
+- [Web](applets/web) - Search & parse the web.
+- [Tarot](applets/tarot) – Get a fortune from the oracle
+- [Calculator](applets/calculator) – Calculate mathematical expressions
+- [Codepad](applets/codepad) – A code editor to display & edit code
+- [Weather](applets/weather) – Get a weather forecast
+- [Wolfram Alpha](applets/wolfram-alpha) – Get scientific data
 
 ## License
 
