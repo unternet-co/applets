@@ -32,12 +32,12 @@ context.setActionHandler('write', ({ contents, language }: WriteProps) => {
 
 context.ondata = () => {
   // TODO: Need to have an option to silently update data
+  if (!context.data) return;
   if (context.data?.contents === flask.getCode()) return;
-  flask.updateCode(context.data.context);
+  flask.updateCode(context.data.contents);
 };
 
 flask.onUpdate((code: string) => {
-  if (code === context.data?.contents) return;
   context.data = {
     language: context.data?.language,
     contents: code,
