@@ -1,0 +1,22 @@
+{
+  "type": "applet",
+  "name": "Todo",
+  "description": "To-do lists",
+  "icon": "check-square",
+  "entrypoint": "index.html",
+  "actions": [
+    {
+      "id": "addtodos",
+      "description": "Create a to-do list from a series of items",
+      "params": {
+        "todos": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of strings."
+        }
+      }
+    }
+  ]
+}

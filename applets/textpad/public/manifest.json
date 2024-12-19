@@ -1,0 +1,21 @@
+{
+  "type": "applet",
+  "name": "Text",
+  "description": "Text responses.",
+  "entrypoint": "index.html",
+  "icon": "type",
+  "frameless": true,
+  "actions": [
+    {
+      "id": "respond",
+      "name": "Text response",
+      "description": "Respond to the user's query",
+      "params": {
+        "text": {
+          "type": "string",
+          "description": "The text to respond with"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "type": "applet",
+  "name": "Clock",
+  "description": "Questions to do with calculating the time in various timezones, including local time",
+  "icon": "clock",
+  "entrypoint": "index.html",
+  "actions": [
+    {
+      "id": "timeforzone",
+      "description": "Get the current time, in either the local timezone or a chosen one",
+      "params": {
+        "timezone": {
+          "type": "string",
+          "description": "The desired timezone to convert to, in the timezone name format that JS understands, e.g. America/New_York. Return only this string. If there is no specific timezone mentioned, return only the word 'Local'"
+        }
+      }
+    }
+  ]
+}
