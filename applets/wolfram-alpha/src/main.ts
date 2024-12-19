@@ -7,6 +7,9 @@ context.setActionHandler("get_knowledge", async ({ query }) => {
   // https://products.wolframalpha.com/short-answers-api/documentation
   const response = await fetch(`https://api.unternet.co/lookup/v1/query`, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({
       q: query,
       wolfram: true
@@ -18,3 +21,7 @@ context.setActionHandler("get_knowledge", async ({ query }) => {
   // Final data for the context
   context.data = { answer: wolfram.answer };
 });
+
+context.ondata = () => {
+  document.body.innerText = context.data.answer;
+};

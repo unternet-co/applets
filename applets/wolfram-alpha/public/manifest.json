@@ -11,7 +11,7 @@
   "actions": [
     {
       "id": "get_knowledge",
-      "description": "Search a query using the Wolfram Alpha knowledge engine, used for background search data no graphical display.",
+      "description": "Search a query using the Wolfram Alpha knowledge engine, used for background search data ONLY - no tool view.",
       "display": "none",
       "params": {
         "query": {
