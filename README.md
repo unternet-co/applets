@@ -12,6 +12,9 @@ For more information, see the Web Applets repo: [unternet-co/web-applets/](https
 - [wolfram-alpha](applets/wolfram-alpha) – Get scientific data
 - [timezone-converter](applets/timezone-converter) - Convert between time zones
 - [currency-converter](applets/currency-converter) - Convert between currencies
+- maps - WIP
+- notes - WIP
+- gmail - WIP
 
 ## License
 
