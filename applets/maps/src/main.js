@@ -47,6 +47,9 @@ context.ondata = (event) => {
   }
 };
 
+// Keep track of active info windows in the maps
+let activeInfoWindows = [];
+
 /**
  * Update the map with the given places
  * @param {Array<Object>} places - Array of Google Maps place objects
@@ -123,7 +126,15 @@ const updateMap = (places) => {
     });
 
     marker.addListener("click", () => {
+      // Close all other info windows
+      activeInfoWindows.forEach((window) => window.close());
+
+      // Clear the array
+      activeInfoWindows = [];
+
+      // Open the new info window and add it to the tracking array
       infoWindow.open(map, marker);
+      activeInfoWindows.push(infoWindow);
     });
   });
 
