@@ -4,7 +4,7 @@
   "description": "Get the weather forecast for your location today.",
   "icons": [
     {
-      "src": "icon-128x128.png"
+      "src": "icon-512x512.png"
     }
   ],
   "actions": [
