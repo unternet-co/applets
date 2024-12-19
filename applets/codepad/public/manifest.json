@@ -1,0 +1,26 @@
+{
+  "name": "Codepad",
+  "short_name": "Codepad",
+  "description": "Display & edit code, complete with syntax highlighting, and a runtime if it's JavaScript",
+  "icons": [
+    {
+      "src": "icon-96x96.png"
+    }
+  ],
+  "actions": [
+    {
+      "id": "write",
+      "description": "Fill the codepad with code",
+      "params": {
+        "contents": {
+          "type": "string",
+          "description": "The code to be written to the pad"
+        },
+        "language": {
+          "type": "string",
+          "description": "The language in a Codeflask compatible string, e.g. 'javascript'"
+        }
+      }
+    }
+  ]
+}
