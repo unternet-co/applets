@@ -1,17 +1,17 @@
 {
   "name": "Wolfram Alpha",
   "short_name": "Wolfram Alpha",
-  "description": "Get computational knowledge from Wolfram Alpha.",
+  "description": "Get computational knowledge from Wolfram Alpha, useful when specific world knowledge facts are required. For example, calculating distances, chemistry equations, mathematical formulas, and other Wolfram Alpha knowledge queries.",
   "version": "1.0",
   "icons": [
     {
-      "src": "icon-128x128.png"
+      "src": "icon-64x64.png"
     }
   ],
   "actions": [
     {
       "id": "get_knowledge",
-      "description": "Get computational knowledge from Wolfram Alpha.",
+      "description": "Search a query using the Wolfram Alpha knowledge engine.",
       "display": "none",
       "params": {
         "query": {
