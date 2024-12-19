@@ -53,16 +53,24 @@ context.ondata = (event) => {
  * @param {Array<Object>} places - Array of Google Maps place objects
  */
 const updateMap = (places) => {
+  // Create bounds object to encompass all places
+  const bounds = new google.maps.LatLngBounds();
+
   places.forEach((place) => {
     if (place.business_status !== "OPERATIONAL") {
       return;
     }
 
+    // Add a marker for each place
     const marker = new google.maps.Marker({
       map: map,
       position: place.geometry.location
     });
 
+    // Extend bounds to include this place
+    bounds.extend(place.geometry.location);
+
+    // Add a info window to each marker
     const infoWindow = new google.maps.InfoWindow({
       content: `<h3>${place.name}</h3><p>${place.formatted_address}</p>`
     });
@@ -72,5 +80,11 @@ const updateMap = (places) => {
     });
   });
 
-  map.setCenter(places[0].geometry.location);
+  // Fit the map to the bounds considering all the given places and center it
+  map.fitBounds(bounds);
+
+  // If there's only one place, set an appropriate zoom level
+  if (places.length === 1) {
+    map.setZoom(15);
+  }
 };
