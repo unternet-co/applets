@@ -1,0 +1,152 @@
+/* global.css */
+
+/* Theme Variables - Can be overridden by parent application if needed */
+:root {
+
+    --text: #333333;
+    --border: #e0e0e0;
+    --accent: #0066cc;
+    --hover: #f5f5f5;
+    --input-bg: #ffffff;
+    --arrow: #666666;
+}
+
+
+
+/* Main Container */
+
+#currency-converter {
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    font-family: 'B612 Mono', 'Share Tech Mono', 'Courier Prime', 'Courier New', monospace;
+    letter-spacing: 0.5px;
+    display: block;  /* Changed from inline-block */
+    margin: 20px auto; /* Center the converter */
+    width: fit-content; /* Let it size to content */
+    height: auto;
+    box-sizing: border-box;
+}
+
+
+
+/* Form Elements */
+select, 
+input[type="number"] {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 12px;
+    border-radius: 4px;
+    outline: none;
+    font-family: 'Share Tech Mono', 'B612 Mono', monospace;
+    letter-spacing: 1px;
+    font-size: 16px; /* Prevent zoom on mobile */
+    max-width: 100px;
+    min-width: 80px;
+    flex-shrink: 1;
+    -webkit-appearance: none; /* Remove default iOS styling */
+    appearance: none;
+}
+
+/* Remove spinner buttons from number input */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield; /* Firefox */
+}
+
+/* Interactive States */
+select:hover, 
+input[type="number"]:hover {
+    background: var(--hover);
+}
+
+select:focus, 
+input[type="number"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+}
+
+/* Convert Button */
+.convert-button {
+    background: none;
+    border: none;
+    color: var(--arrow);
+    font-size: 1.2em;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px; /* Better touch target */
+    min-height: 44px; /* Better touch target */
+}
+
+.convert-button:hover {
+    transform: scale(1.1);
+}
+
+.convert-button:active {
+    transform: scale(0.95);
+}
+
+/* Layout Utilities */
+.flex {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.flex-col {
+    width: 100%;
+}
+
+/* Result Display */
+.converted-value {
+    min-height: 1.5em;
+    width: 100%;
+    text-align: left;
+    margin-top: 12px;
+    color: var(--accent);
+    font-family: 'Share Tech Mono', 'B612 Mono', monospace;
+    letter-spacing: 1.2px;
+    font-size: 16px;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 480px) {
+    .flex {
+        gap: 8px;
+    }
+    
+    select, 
+    input[type="number"] {
+        padding: 12px; /* Larger touch targets */
+        font-size: 16px; /* Prevent zoom */
+    }
+    
+    .convert-button {
+        padding: 12px;
+    }
+}
+
+/* iOS Specific Fixes */
+@supports (-webkit-touch-callout: none) {
+    select, 
+    input[type="number"] {
+        font-size: 16px;
+    }
+    
+    .flex {
+        gap: 8px; /* Tighter spacing on iOS */
+    }
+}
