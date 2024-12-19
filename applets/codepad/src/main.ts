@@ -2,6 +2,10 @@ import { applets } from '@web-applets/sdk';
 import CodeFlask from 'codeflask';
 
 const context = applets.getContext();
+context.data = {
+  language: 'js',
+  contents: '',
+};
 
 let flask = new CodeFlask(`#codeflask`, {
   language: 'js',
@@ -27,9 +31,8 @@ context.setActionHandler('write', ({ contents, language }: WriteProps) => {
 });
 
 context.ondata = () => {
-  // If first run...
   // TODO: Need to have an option to silently update data
-  if (context.data.contents === flask.getCode()) return;
+  if (context.data?.contents === flask.getCode()) return;
   flask.updateCode(context.data.context);
 };
 
