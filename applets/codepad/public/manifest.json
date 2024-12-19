@@ -10,7 +10,7 @@
   "actions": [
     {
       "id": "write",
-      "description": "Fill the codepad with code",
+      "description": "Write a string of code to an interactive codepad to display to the user, use this as a default for instructions to write code",
       "params": {
         "contents": {
           "type": "string",
