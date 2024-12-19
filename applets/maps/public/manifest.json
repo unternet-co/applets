@@ -1,7 +1,7 @@
 {
   "name": "Maps",
   "short_name": "Maps",
-  "description": "Map locations, and get information like opening hours and reviews about restaurants, local businesses, etc.",
+  "description": "Search for places on Google Maps, map it, and get information",
   "version": "1.0",
   "icons": [
     {
@@ -11,7 +11,7 @@
   "actions": [
     {
       "id": "search",
-      "description": "Search Google Maps for a place, map it, and get information",
+      "description": "Search for places on Google Maps, map it, and get information",
       "display": "none",
       "params": {
         "query": {
