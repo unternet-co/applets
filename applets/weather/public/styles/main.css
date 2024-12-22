@@ -1,3 +1,70 @@
-table {
-  margin: 1rem 0;
+.main-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  padding: 1rem;
+  max-width: 730px;
+}
+
+/* Today/Current Weather */
+.item-today {
+  grid-column: 1 / span 6;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+.item-today > p {
+  grid-column: 1 / span 6;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  padding-left: 0.5rem;
+}
+.item-today img {
+  max-width: 200px;
+  grid-column: 1 / span 2;
+  align-self: center;
+}
+.item-today-weather {
+  grid-column: 3 / span 4;
+  justify-self: end;
+  padding-right: 1rem;
+}
+.item-today-weather > p:nth-child(1) {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: right;
+}
+.item-today-weather > p:nth-child(2) {
+  font-size: 1.5rem;
+  text-align: right;
+}
+.item-today-weather > div {
+  display: flex;
+  gap: 4rem;
+  margin-top: 3rem;
+}
+.item-today-weather > div p {
+  font-size: 1.3rem;
+}
+.item-today-weather > div p span {
+  display: block;
+  font-size: 2rem;
+}
+
+/* Forecast Weather */
+.item-forecast-day {
+  justify-self: center;
+  text-align: center;
+}
+.item-forecast-day img {
+  max-width: 50px;
+  margin: 0.5rem auto 0.75rem auto;
+}
+.item-forecast-day p:nth-child(1) {
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: center;
 }

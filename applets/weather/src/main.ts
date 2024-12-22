@@ -44,27 +44,72 @@ context.ondata = (event) => {
 
   // HTML output
   const fragment = document.createDocumentFragment();
+  const grid = document.createElement("div");
+  grid.classList.add("main-grid");
 
-  // Today/Current Weather
-  const p = document.createElement("p");
-  p.textContent = `Current Temperature: ${forecastDataCurrent.temperature_2m}°C - Today's weather in ${locationName}: `;
-  const span = document.createElement("span");
-  span.textContent = `High ${forecastDataDaily[0].temperatureMax}°C / Low ${forecastDataDaily[0].temperatureMin}°C - Current Weather Code: ${forecastDataCurrent.weather_code}`;
-  p.appendChild(span);
-  fragment.appendChild(p);
+  // Today / Current Weather
+  const gridItemToday = document.createElement("div");
+  gridItemToday.classList.add("item-today");
 
+  const gridItemLocation = document.createElement("p");
+  gridItemLocation.textContent = `Weather in ${locationName}`;
+
+  const gridItemTodayImage = document.createElement("img");
+  if (forecastDataCurrent.weather_code <= 2) {
+    gridItemTodayImage.src = `/weather/images/${forecastDataCurrent.weather_code}_${
+      forecastDataCurrent.is_day ? "day" : "night"
+    }.png`;
+  } else {
+    gridItemTodayImage.src = `/weather/images/${forecastDataCurrent.weather_code}.png`;
+  }
+
+  const gridItemTodayWeather = document.createElement("div");
+  gridItemTodayWeather.classList.add("item-today-weather");
+  gridItemTodayWeather.innerHTML = `
+    <p>Today</p>
+    <p>${getWeatherConditions(forecastDataCurrent.weather_code, forecastDataCurrent.is_day)}</p>
+    <div>
+      <p>High <span>${forecastDataDaily[0].temperatureMax}°C</span></p>
+      <p>Low <span>${forecastDataDaily[0].temperatureMin}°C</span></p>
+    </div>
+  `;
+
+  gridItemToday.appendChild(gridItemLocation);
+  gridItemToday.appendChild(gridItemTodayImage);
+  gridItemToday.appendChild(gridItemTodayWeather);
+  grid.appendChild(gridItemToday);
+
+  // Daily Forecast (Next 6 days)
   forecastDataDaily.forEach((forecastDataDaily, index) => {
     // Avoid to show today's weather in the next days forecast
     if (index === 0) {
       return;
     }
 
-    const p = document.createElement("p");
-    p.textContent = `Day: ${getDayOfWeek(forecastDataDaily.time)} - Temperature: ${
-      forecastDataDaily.temperatureMax
-    }°C / ${forecastDataDaily.temperatureMin}°C - Weather Code: ${forecastDataDaily.weatherCode}`;
-    fragment.appendChild(p);
+    const gridItemForecast = document.createElement("div");
+    gridItemForecast.classList.add("item-forecast-day");
+
+    const gridItemForecastDay = document.createElement("p");
+    gridItemForecastDay.textContent = getDayOfWeek(forecastDataDaily.time);
+
+    const gridItemForecastImage = document.createElement("img");
+    gridItemForecastImage.src = `/weather/images/${forecastDataDaily.weatherCode}.png`;
+
+    const gridItemForecastHight = document.createElement("p");
+    gridItemForecastHight.textContent = `${forecastDataDaily.temperatureMax}`;
+
+    const gridItemForecastLow = document.createElement("p");
+    gridItemForecastLow.textContent = `${forecastDataDaily.temperatureMin}`;
+
+    gridItemForecast.appendChild(gridItemForecastDay);
+    gridItemForecast.appendChild(gridItemForecastImage);
+    gridItemForecast.appendChild(gridItemForecastHight);
+    gridItemForecast.appendChild(gridItemForecastLow);
+
+    grid.appendChild(gridItemForecast);
   });
+
+  fragment.appendChild(grid);
 
   // Update the document body in a single operation
   document.body.replaceChildren(fragment);
@@ -108,7 +153,7 @@ const getLocationForecast = async (latitude: number, longitude: number) => {
   const weatherAPIUrl = "https://api.open-meteo.com/v1/forecast";
 
   const weatherResponse = await fetch(
-    `${weatherAPIUrl}?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`
+    `${weatherAPIUrl}?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`
   );
 
   const weatherData = await weatherResponse.json();
@@ -132,4 +177,74 @@ const getDayOfWeek = (dateString: string) => {
   const date = new Date(dateString);
   const day = date.toLocaleString("en-US", { weekday: "short" });
   return day;
+};
+
+/**
+ * Gets the weather conditions from a weather code.
+ * The weather code comes from a WMO standard.
+ * @param weatherCode The weather code to get the weather conditions from.
+ * @param isDay Whether the weather is day or night.
+ * @returns The weather conditions.
+ */
+const getWeatherConditions = (weatherCode: number, isDay?: boolean) => {
+  switch (weatherCode) {
+    case 0:
+      return isDay ? "Sunny" : "Clear";
+    case 1:
+      return isDay ? "Mostly Sunny" : "Mostly Clear";
+    case 2:
+      return "Partly Cloudy";
+    case 3:
+      return "Overcast";
+    case 45:
+      return "Fog";
+    case 48:
+      return "Icy Fog";
+    case 51:
+      return "Light Drizzle";
+    case 53:
+      return "Drizzle";
+    case 55:
+      return "Heavy Drizzle";
+    case 56:
+      return "Light Icy Drizzle";
+    case 57:
+      return "Icy Drizzle";
+    case 61:
+      return "Light Rain";
+    case 63:
+      return "Rain";
+    case 65:
+      return "Heavy Rain";
+    case 66:
+      return "Light Icy Rain";
+    case 67:
+      return "Icy Rain";
+    case 71:
+      return "Light Snow";
+    case 73:
+      return "Snow";
+    case 75:
+      return "Heavy Snow";
+    case 77:
+      return "Snow Grains";
+    case 80:
+      return "Light Showers";
+    case 81:
+      return "Showers";
+    case 82:
+      return "Heavy Showers";
+    case 85:
+      return "Light Snow Showers";
+    case 86:
+      return "Snow Showers";
+    case 95:
+      return "Thunderstorm";
+    case 96:
+      return "Thunderstorms With Light Hail";
+    case 99:
+      return "Thunderstorms With Hail";
+    default:
+      return "";
+  }
 };
