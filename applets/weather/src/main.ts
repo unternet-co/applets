@@ -11,28 +11,18 @@ context.setActionHandler("get_weather", async ({ location }) => {
   }
 
   // Get the weather forecast for the location coordinates
-  const locationTodayWeather = await getLocationTodayWeather(
-    locationCoordinates.latitude,
-    locationCoordinates.longitude
-  );
-  if ("error" in locationTodayWeather) {
-    context.data = { error: locationTodayWeather.error };
+  const locationForecast = await getLocationForecast(locationCoordinates.latitude, locationCoordinates.longitude);
+  if ("error" in locationForecast) {
+    context.data = { error: locationForecast.error };
     return;
   }
-
-  // Variables for the data results in the context
-  const locationName = `${locationCoordinates.locationName}, ${locationCoordinates.locationAdmin1}, ${locationCoordinates.locationCountry}`;
-  const locationWeatherHourlyTime = locationTodayWeather.time;
-  const locationWeatherHourlyTemperature = locationTodayWeather.temperature;
-  const locationWeatherHourlyPrecipitationProbability = locationTodayWeather.precipitationProbability;
 
   // Final data for the context
   context.data = {
     weather: {
-      location: locationName,
-      time: locationWeatherHourlyTime,
-      temperature: locationWeatherHourlyTemperature,
-      precipitationProbability: locationWeatherHourlyPrecipitationProbability
+      location: `${locationCoordinates.locationName}, ${locationCoordinates.locationAdmin1}, ${locationCoordinates.locationCountry}`,
+      current: locationForecast.current,
+      daily: locationForecast.daily
     }
   };
 });
@@ -44,40 +34,85 @@ context.ondata = (event) => {
 
   // Setup variables for the HTML output
   const locationName = event.data.weather.location;
-  const forecastData = event.data.weather.time.map((time: string, index: number) => ({
+  const forecastDataCurrent = event.data.weather.current;
+  const forecastDataDaily = event.data.weather.daily.time.map((time: string, index: number) => ({
     time,
-    temperature: event.data.weather.temperature[index],
-    precipitationProbability: event.data.weather.precipitationProbability[index]
+    temperatureMax: event.data.weather.daily.temperature_2m_max[index],
+    temperatureMin: event.data.weather.daily.temperature_2m_min[index],
+    weatherCode: event.data.weather.daily.weather_code[index]
   }));
 
   // HTML output
-  document.body.innerHTML = `
-  <p>Here is the forecast for <strong>${formatDate(
-    forecastData[0].time
-  )}</strong> in the location <strong>${locationName}</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Time</th>
-        <th>Temperature</th>
-        <th>Precipitation Probability</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${forecastData
-        .map(
-          (row) => `
-        <tr>
-          <td>${row.time.split("T")[1].slice(0, 5)}</td>
-          <td>${row.temperature}°C</td>
-          <td>${row.precipitationProbability}%</td>
-        </tr>
-      `
-        )
-        .join("")}
-    </tbody>
-  </table>
-`;
+  const fragment = document.createDocumentFragment();
+  const grid = document.createElement("div");
+  grid.classList.add("main-grid");
+
+  // Today / Current Weather
+  const gridItemToday = document.createElement("div");
+  gridItemToday.classList.add("item-today");
+
+  const gridItemLocation = document.createElement("p");
+  gridItemLocation.textContent = `Weather in ${locationName}`;
+
+  const gridItemTodayImage = document.createElement("img");
+  if (forecastDataCurrent.weather_code <= 2) {
+    gridItemTodayImage.src = `/weather/images/${forecastDataCurrent.weather_code}_${
+      forecastDataCurrent.is_day ? "day" : "night"
+    }.png`;
+  } else {
+    gridItemTodayImage.src = `/weather/images/${forecastDataCurrent.weather_code}.png`;
+  }
+
+  const gridItemTodayWeather = document.createElement("div");
+  gridItemTodayWeather.classList.add("item-today-weather");
+  gridItemTodayWeather.innerHTML = `
+    <p>Today</p>
+    <p>${getWeatherConditions(forecastDataCurrent.weather_code, forecastDataCurrent.is_day)}</p>
+    <div>
+      <p>High <span>${forecastDataDaily[0].temperatureMax}°C</span></p>
+      <p>Low <span>${forecastDataDaily[0].temperatureMin}°C</span></p>
+    </div>
+  `;
+
+  gridItemToday.appendChild(gridItemLocation);
+  gridItemToday.appendChild(gridItemTodayImage);
+  gridItemToday.appendChild(gridItemTodayWeather);
+  grid.appendChild(gridItemToday);
+
+  // Daily Forecast (Next 6 days)
+  forecastDataDaily.forEach((forecastDataDaily, index) => {
+    // Avoid to show today's weather in the next days forecast
+    if (index === 0) {
+      return;
+    }
+
+    const gridItemForecast = document.createElement("div");
+    gridItemForecast.classList.add("item-forecast-day");
+
+    const gridItemForecastDay = document.createElement("p");
+    gridItemForecastDay.textContent = getDayOfWeek(forecastDataDaily.time);
+
+    const gridItemForecastImage = document.createElement("img");
+    gridItemForecastImage.src = `/weather/images/${forecastDataDaily.weatherCode}.png`;
+
+    const gridItemForecastHight = document.createElement("p");
+    gridItemForecastHight.textContent = `${forecastDataDaily.temperatureMax}`;
+
+    const gridItemForecastLow = document.createElement("p");
+    gridItemForecastLow.textContent = `${forecastDataDaily.temperatureMin}`;
+
+    gridItemForecast.appendChild(gridItemForecastDay);
+    gridItemForecast.appendChild(gridItemForecastImage);
+    gridItemForecast.appendChild(gridItemForecastHight);
+    gridItemForecast.appendChild(gridItemForecastLow);
+
+    grid.appendChild(gridItemForecast);
+  });
+
+  fragment.appendChild(grid);
+
+  // Update the document body in a single operation
+  document.body.replaceChildren(fragment);
 };
 
 /**
@@ -109,17 +144,18 @@ const getLocationCoordinates = async (location: string) => {
 };
 
 /**
- * Gets the weather forecast for a location.
+ * Gets the location forecast from the weather API.
  * @param latitude The latitude of the location.
  * @param longitude The longitude of the location.
- * @returns The weather forecast for current day, or an error message.
+ * @returns The location forecast, or an error message.
  */
-const getLocationTodayWeather = async (latitude: number, longitude: number) => {
+const getLocationForecast = async (latitude: number, longitude: number) => {
   const weatherAPIUrl = "https://api.open-meteo.com/v1/forecast";
 
   const weatherResponse = await fetch(
-    `${weatherAPIUrl}?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation_probability&timezone=auto&forecast_days=1`
+    `${weatherAPIUrl}?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`
   );
+
   const weatherData = await weatherResponse.json();
 
   if (weatherData.error) {
@@ -127,21 +163,88 @@ const getLocationTodayWeather = async (latitude: number, longitude: number) => {
   }
 
   return {
-    time: weatherData.hourly.time,
-    temperature: weatherData.hourly.temperature_2m,
-    precipitationProbability: weatherData.hourly.precipitation_probability
+    current: weatherData.current,
+    daily: weatherData.daily
   };
 };
 
 /**
- * Formats a date string into a readable format.
+ * Gets the day of the week from a date string.
  * @param dateString The date string to format.
- * @returns The formatted date string.
+ * @returns The day of the week (short format).
  */
-const formatDate = (dateString: string) => {
+const getDayOfWeek = (dateString: string) => {
   const date = new Date(dateString);
-  const day = date.getDate();
-  const month = date.toLocaleString("en-US", { month: "long" });
-  const suffix = ["th", "st", "nd", "rd"][(day % 10 > 3 ? 0 : day % 10) * (day < 11 || day > 13 ? 1 : 0)] || "th";
-  return `${month} ${day}${suffix}`;
+  const day = date.toLocaleString("en-US", { weekday: "short" });
+  return day;
+};
+
+/**
+ * Gets the weather conditions from a weather code.
+ * The weather code comes from a WMO standard.
+ * @param weatherCode The weather code to get the weather conditions from.
+ * @param isDay Whether the weather is day or night.
+ * @returns The weather conditions.
+ */
+const getWeatherConditions = (weatherCode: number, isDay?: boolean) => {
+  switch (weatherCode) {
+    case 0:
+      return isDay ? "Sunny" : "Clear";
+    case 1:
+      return isDay ? "Mostly Sunny" : "Mostly Clear";
+    case 2:
+      return "Partly Cloudy";
+    case 3:
+      return "Overcast";
+    case 45:
+      return "Fog";
+    case 48:
+      return "Icy Fog";
+    case 51:
+      return "Light Drizzle";
+    case 53:
+      return "Drizzle";
+    case 55:
+      return "Heavy Drizzle";
+    case 56:
+      return "Light Icy Drizzle";
+    case 57:
+      return "Icy Drizzle";
+    case 61:
+      return "Light Rain";
+    case 63:
+      return "Rain";
+    case 65:
+      return "Heavy Rain";
+    case 66:
+      return "Light Icy Rain";
+    case 67:
+      return "Icy Rain";
+    case 71:
+      return "Light Snow";
+    case 73:
+      return "Snow";
+    case 75:
+      return "Heavy Snow";
+    case 77:
+      return "Snow Grains";
+    case 80:
+      return "Light Showers";
+    case 81:
+      return "Showers";
+    case 82:
+      return "Heavy Showers";
+    case 85:
+      return "Light Snow Showers";
+    case 86:
+      return "Snow Showers";
+    case 95:
+      return "Thunderstorm";
+    case 96:
+      return "Thunderstorms With Light Hail";
+    case 99:
+      return "Thunderstorms With Hail";
+    default:
+      return "";
+  }
 };
