@@ -80,7 +80,6 @@ async function getPlacesForQuery(query: string) {
       if (status === "OK" && results) {
         resolve(processPlaceResults(results));
       } else {
-        /** @TODO: handle error state */
         reject(new Error(`Places search failed with status: ${status}`));
       }
     });
@@ -131,6 +130,52 @@ async function renderPinsForPlaces(places: Place[]) {
   map.fitBounds(bounds);
 }
 
+function errorHasMessage(error: unknown): error is { message: string } {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "message" in error &&
+    typeof error.message === "string"
+  );
+}
+
+function getErrorMessage(error: unknown) {
+  if (errorHasMessage(error)) {
+    return error.message;
+  } else {
+    return "Something went wrong. Please try again.";
+  }
+}
+
+function renderAlert(message: string) {
+  const alertsContainer = document.getElementById("alerts");
+  if (alertsContainer) {
+    alertsContainer.innerHTML = `
+      <div style="background-color: #FDEAEA; color: #E63946; padding: 1rem; display: flex; align-items: center; gap: 1rem;">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            view-box="0 0 24 24"
+            fill="currentColor"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-winecap="round"
+            stroke-winejoin="round"
+            width="24"
+            height="24"
+          >
+            <circle cx="12" cy="12" r="10" fill="#E63946" />
+            <line x1="12" y1="7" x2="12" y2="12" stroke="white" stroke-width="2" stroke-linecap="round" />
+            <circle cx="12" cy="17" r="0.5" fill="currentColor" stroke="white" />
+          </svg>
+          <div>
+            ${message}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+
 const context = applets.getContext();
 
 context.defineAction("search", {
@@ -141,17 +186,21 @@ context.defineAction("search", {
     },
   },
   handler: async ({ query }) => {
+    context.data = { query, error: undefined };
     try {
       const places = await getPlacesForQuery(query);
       context.data = { query, places };
     } catch (error) {
-      context.data = { query };
-      console.log(error);
+      const errorMessage = getErrorMessage(error);
+      context.data = { query, error: errorMessage };
     }
   },
 });
 
 context.ondata = () => {
+  if (context.data.error) {
+    renderAlert(context.data.error);
+  }
   if (context.data.places) {
     renderPinsForPlaces(context.data.places);
   }
