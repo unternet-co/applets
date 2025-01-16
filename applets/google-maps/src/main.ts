@@ -148,10 +148,17 @@ function getErrorMessage(error: unknown) {
 }
 
 function renderAlert(message: string) {
-  const alertsContainer = document.getElementById("alerts");
-  if (alertsContainer) {
-    alertsContainer.innerHTML = `
-      <div style="background-color: #FDEAEA; color: #E63946; padding: 1rem; display: flex; align-items: center; gap: 1rem;">
+  const alertDiv = document.createElement("div");
+  alertDiv.style.position = "absolute";
+  alertDiv.style.zIndex = "1000";
+  alertDiv.style.bottom = "24px";
+  alertDiv.style.left = "50%";
+  alertDiv.style.transform = "translateX(-50%)";
+  alertDiv.style.width = "max-content";
+  alertDiv.style.opacity = "0";
+  alertDiv.style.transition = "opacity 0.3s ease-in-out";
+  alertDiv.innerHTML = `
+      <div style="background-color: #FDEAEA; color: #E63946; padding: 0.5rem; display: flex; align-items: center; gap: 0.5rem; border: solid 1px #E63946; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             view-box="0 0 24 24"
@@ -162,6 +169,7 @@ function renderAlert(message: string) {
             stroke-winejoin="round"
             width="24"
             height="24"
+            style="flex-shrink: 0;"
           >
             <circle cx="12" cy="12" r="10" fill="#E63946" />
             <line x1="12" y1="7" x2="12" y2="12" stroke="white" stroke-width="2" stroke-linecap="round" />
@@ -173,7 +181,24 @@ function renderAlert(message: string) {
         </div>
       </div>
     `;
-  }
+
+  map.getDiv().appendChild(alertDiv);
+
+  /** Fade the alert in */
+  setTimeout(() => {
+    alertDiv.style.opacity = "1";
+  }, 1);
+
+  /** Set a timeout to fade the alert out, then remove the alert */
+  setTimeout(() => {
+    alertDiv.style.opacity = "0";
+
+    setTimeout(() => {
+      if (alertDiv.parentNode) {
+        alertDiv.parentNode.removeChild(alertDiv);
+      }
+    }, 300);
+  }, 4000);
 }
 
 const context = applets.getContext();
