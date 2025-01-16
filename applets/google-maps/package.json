@@ -9,6 +9,7 @@
     "@web-applets/sdk": "latest"
   },
   "devDependencies": {
+    "@types/google.maps": "^3.58.1",
     "vite": "^5.4.9"
   }
 }
