@@ -12,10 +12,14 @@
       "id": "search",
       "description": "Search for locations with Google Maps",
       "parameters": {
-        "query": {
-          "type": "string",
-          "description": "The search query for locations on the map."
-        }
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The search query for locations on the map."
+          }
+        },
+        "required": ["query"]
       }
     }
   ]

@@ -18,7 +18,7 @@ context.ondata = () => {
   if (!context.data) return;
   document.body.innerHTML = /*html*/ `
     <div class="tarot-main">
-      <img class="image-placeholder" src="./cards/${context.data.id}.jpeg" />
+      <img class="image-placeholder" src="/tarot/cards/${context.data.id}.jpeg" />
       <div>
         <h1>${context.data.name}</h1>
         <p class="meaning">${context.data.meaning}</p>
