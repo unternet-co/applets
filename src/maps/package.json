@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "inspect": "npx @web-applets/inspector .",
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@googlemaps/js-api-loader": "^1.16.8",
+    "@web-applets/sdk": "latest"
+  },
+  "devDependencies": {
+    "@types/google.maps": "^3.58.1",
+    "vite": "^5.4.9"
+  }
+}

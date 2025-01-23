@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
 const { promisify } = require('util');
-const { copy } = require('fs-extra');
+const { copy, emptyDirSync } = require('fs-extra');
 
 const execAsync = promisify(exec);
 
@@ -43,17 +43,6 @@ async function buildApplet(appletPath, appletName) {
   }
 }
 
-// Copy folder for an applet
-async function copyFolder(sourcePath, targetPath, appletName) {
-  try {
-    await copy(sourcePath, targetPath);
-    return true;
-  } catch (error) {
-    console.error(`\nFailed to copy folder:`, error.message);
-    return false;
-  }
-}
-
 // Process a single applet
 async function processApplet(appletName, appletsDir, distDir) {
   const appletPath = path.join(appletsDir, appletName);
@@ -64,33 +53,34 @@ async function processApplet(appletName, appletsDir, distDir) {
     const buildSuccess = await buildApplet(appletPath, appletName);
     if (buildSuccess) {
       const appletDistPath = path.join(appletPath, 'dist');
-      await copyFolder(appletDistPath, targetPath, appletName);
+      await copy(appletDistPath, targetPath);
     }
   } else {
     // If no package.json, copy the entire folder directly
     console.log(`${appletName} appears to be pre-built, copying directly...`);
-    await copyFolder(appletPath, targetPath, appletName);
+    await copy(appletPath, targetPath);
   }
 }
 
 // Main function
 async function main() {
-  const appletsDir = path.join(process.cwd(), 'applets');
+  const srcDir = path.join(process.cwd(), 'src');
   const distDir = path.join(process.cwd(), 'dist');
+  emptyDirSync(distDir);
 
   try {
     // Setup
     ensureDirectory(distDir);
-    const subdirs = getSubdirectories(appletsDir);
+    const subdirs = getSubdirectories(srcDir);
 
     // Process all applets
     const results = await Promise.all(
-      subdirs.map((subdir) => processApplet(subdir, appletsDir, distDir))
+      subdirs.map((subdir) => processApplet(subdir, srcDir, distDir))
     );
 
     // Summary
     const totalApplets = subdirs.length;
-    console.log(`Done! Total applets processed: ${totalApplets}`);
+    console.log(`Done! Total applets built: ${totalApplets}`);
   } catch (error) {
     console.error('Fatal error:', error.message);
     process.exit(1);
