@@ -1,12 +1,12 @@
 @font-face {
   font-family: Avara;
-  src: url('./fonts/Avara-Bold.ttf');
+  src: url('/tarot/fonts/Avara-Bold.ttf');
 }
 
 @font-face {
   font-family: Avara;
   font-style: italic;
-  src: url('./fonts/Avara-BoldItalic.ttf');
+  src: url('/tarot/fonts/Avara-BoldItalic.ttf');
 }
 
 * {
