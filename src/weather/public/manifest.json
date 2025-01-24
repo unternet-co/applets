@@ -12,12 +12,16 @@
       "id": "get_weather",
       "description": "Get the weather forecast for your location today.",
       "display": "none",
-      "params": {
-        "location": {
-          "type": "string",
-          "description": "A location"
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "description": "The name of the location (e.g. city) to get the forecast for."
+          }
         }
-      }
+      },
+      "required": ["location"]
     }
   ]
 }
