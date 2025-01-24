@@ -1,7 +1,7 @@
-import { appletContext } from '@web-applets/sdk';
+import { applets } from '@web-applets/sdk';
 import { html, render } from 'lit';
 
-const applet = appletContext.connect();
+const applet = applets.getContext();
 applet.data = [];
 
 applet.setActionHandler('addtodos', ({ todos }) => {
@@ -33,7 +33,7 @@ function deleteTodo(index: number) {
   applet.data = newState;
 }
 
-applet.onrender = () => {
+applet.ondata = () => {
   const template = html`
     ${applet.data.map((todo, index) => {
       return html`
