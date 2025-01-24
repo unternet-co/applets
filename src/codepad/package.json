@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@web-applets/sdk": "latest",
+    "codeflask": "^1.4.1"
+  },
+  "devDependencies": {
+    "@types/codeflask": "^1.4.6"
+  }
+}
