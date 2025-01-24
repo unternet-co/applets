@@ -1,8 +1,12 @@
 {
-  "type": "applet",
   "name": "Todo",
+  "short_name": "Todo",
   "description": "To-do lists",
-  "icon": "check-square",
+  "icons": [
+    {
+      "src": "icon-256x256.png"
+    }
+  ],
   "entrypoint": "index.html",
   "actions": [
     {
