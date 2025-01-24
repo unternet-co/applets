@@ -1,6 +1,6 @@
 {
-  "type": "applet",
   "name": "Todo",
+  "short_name": "Todo",
   "description": "To-do lists",
   "icons": [
     {
