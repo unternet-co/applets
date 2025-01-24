@@ -2,19 +2,19 @@ import { appletContext } from '@web-applets/sdk';
 import { html, render } from 'lit';
 
 const applet = appletContext.connect();
-applet.state = [];
+applet.data = [];
 
 applet.setActionHandler('addtodos', ({ todos }) => {
-  applet.state = todos.map((x) => ({
+  applet.data = todos.map((x) => ({
     checked: false,
     name: x,
   }));
 });
 
 function toggle(index: number) {
-  const newState = [...applet.state];
+  const newState = [...applet.data];
   newState[index].checked = !newState[index].checked;
-  applet.state = newState;
+  applet.data = newState;
 }
 
 function addTodo(event: Event) {
@@ -22,20 +22,20 @@ function addTodo(event: Event) {
   const input = document.getElementById('new-todo') as HTMLInputElement;
   const newTodoName = input.value.trim();
   if (newTodoName) {
-    applet.state = [...applet.state, { checked: false, name: newTodoName }];
+    applet.data = [...applet.data, { checked: false, name: newTodoName }];
     input.value = '';
   }
 }
 
 function deleteTodo(index: number) {
-  const newState = [...applet.state];
+  const newState = [...applet.data];
   newState.splice(index, 1);
-  applet.state = newState;
+  applet.data = newState;
 }
 
 applet.onrender = () => {
   const template = html`
-    ${applet.state.map((todo, index) => {
+    ${applet.data.map((todo, index) => {
       return html`
         <div class="todo">
           <input
