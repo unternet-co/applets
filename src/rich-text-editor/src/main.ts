@@ -11,6 +11,17 @@ context.setActionHandler("write", ({ text }) => {
   context.data = { text };
 });
 
+context.setActionHandler("append", ({ text }) => {
+  if (!editor) return;
+
+  const delta = editor.getContents();
+  const content = editor.getText();
+  const html = editor.root.innerHTML;
+  console.log("delta", JSON.stringify(delta));
+  console.log("content", content);
+  console.log("html", html);
+});
+
 context.ondata = () => {
   if (!editor) {
     throw new Error("No editor found");

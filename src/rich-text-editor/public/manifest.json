@@ -10,7 +10,20 @@
   "actions": [
     {
       "id": "write",
-      "description": "Writes output to the editor.",
+      "description": "Writes output to the editor. Will replace the editor content.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": ["text"]
+      }
+    },
+    {
+      "id": "append",
+      "description": "Append the output to the current editor content.",
       "parameters": {
         "type": "object",
         "properties": {
