@@ -1,0 +1,25 @@
+{
+  "name": "Rich Text Editor Applet",
+  "description": "",
+  "icons": [
+    {
+      "src": "icon-128x128.png"
+    }
+  ],
+  "entrypoint": "index.html",
+  "actions": [
+    {
+      "id": "write",
+      "description": "Writes output to the editor.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": ["text"]
+      }
+    }
+  ]
+}

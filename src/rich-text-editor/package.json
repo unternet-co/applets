@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "inspect": "npx @web-applets/inspector .",
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@web-applets/sdk": "latest",
+    "quill": "^2.0.3",
+    "quilljs-markdown": "^1.2.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.9"
+  }
+}
