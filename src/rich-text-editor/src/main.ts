@@ -45,18 +45,17 @@ function loadEditor(element: HTMLElement) {
     theme: "snow",
     modules: {
       toolbar: [
-        [{ header: [1, 2, false] }],
+        [{ header: [1, 2, 3, false] }],
         ["bold", "italic", "underline", "strike"],
         [{ list: "ordered" }, { list: "bullet" }],
         ["blockquote", "code-block"],
-        [{ script: "sub" }, { script: "super" }],
         [{ color: [] }, { background: [] }],
-        [{ align: [] }],
-        ["link", "image", "video"],
-        ["clean"],
+        ["link"],
       ],
     },
   });
 
   new QuillMarkdown(editor);
+
+  return editor;
 }
