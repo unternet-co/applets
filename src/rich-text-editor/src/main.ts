@@ -26,7 +26,10 @@ context.ondata = () => {
 
   if (context?.data?.text && context?.data?.source === "applet") {
     /** We only want to update the editor if the change came from outside the editor */
+    /** Disable the editor while pasting so that it doesn't steal focus */
+    editor.disable();
     editor.clipboard.dangerouslyPasteHTML(context.data.text);
+    editor.enable();
   }
 };
 
