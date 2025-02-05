@@ -1,6 +1,7 @@
 {
   "name": "Rich Text Editor Applet",
-  "description": "",
+  "short_name": "RTE",
+  "description": "A rich text editor, powered by Quill",
   "icons": [
     {
       "src": "icon-128x128.png"
