@@ -3,20 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="manifest" href="/maps/manifest.json" />
+    <link rel="manifest" href="/manifest.json" />
     <title>Google Maps Applet</title>
     <style>
       html,
-      body {
+      body,
+      #map {
         padding: 0;
         margin: 0;
+        height: 100%;
+        width: 100%;
       }
       body {
         font-family: system-ui;
-      }
-      #map {
-        height: 500px;
-        width: 100%;
       }
     </style>
     <script src="./src/main.ts" type="module" defer></script>
