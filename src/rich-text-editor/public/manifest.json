@@ -1,0 +1,39 @@
+{
+  "name": "Rich Text Editor Applet",
+  "short_name": "RTE",
+  "description": "A rich text editor, powered by Quill",
+  "icons": [
+    {
+      "src": "icon-128x128.png"
+    }
+  ],
+  "entrypoint": "index.html",
+  "actions": [
+    {
+      "id": "write",
+      "description": "Writes output to the editor. Will replace the editor content.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": ["text"]
+      }
+    },
+    {
+      "id": "append",
+      "description": "Append the output to the current editor content.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": ["text"]
+      }
+    }
+  ]
+}
