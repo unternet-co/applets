@@ -244,4 +244,6 @@ context.ondata = () => {
   }
 };
 
-initialiseMap();
+context.onload = async () => {
+  await initialiseMap();
+};
