@@ -17,6 +17,7 @@ type Place = {
 
 let map;
 let infoWindow;
+let currentMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
 
 const loader = new Loader({
   apiKey: import.meta.env.VITE_PUBLIC_MAPS_API_KEY,
@@ -125,9 +126,19 @@ async function renderPinsForPlaces(places: Place[]) {
       infoWindow.open(marker.map, marker);
     });
 
+    currentMarkers.push(marker);
+
     bounds.extend(place.location);
   });
   map.fitBounds(bounds);
+}
+
+function clearAllPins() {
+  currentMarkers.forEach((marker) => {
+    marker.map = null;
+  });
+
+  currentMarkers = [];
 }
 
 function errorHasMessage(error: unknown): error is { message: string } {
@@ -223,6 +234,8 @@ context.defineAction("search", {
 });
 
 context.ondata = () => {
+  clearAllPins();
+
   if (context.data.error) {
     renderAlert(context.data.error);
   }
