@@ -4,11 +4,6 @@ A collection of home-grown Web Applets that can be used with any client that imp
 
 For more information, and an interactive directory, see the Unternet website: [unternet.co](https://unternet.co/).
 
-- [Calculator](src/calculator) – Calculate mathematical expressions
-- [Codepad](src/codepad) – A code editor to display & edit code
-- [Maps](src/maps) – Get scientific data
-- [Weather](src/weather) – Get a weather forecast
-
 ## License
 
 [MIT](./LICENSE.md)
