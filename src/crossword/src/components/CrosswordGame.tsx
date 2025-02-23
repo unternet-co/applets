@@ -172,31 +172,82 @@ const CrosswordGame: React.FC = () => {
     return false;
   };
 
-  const solvePuzzle = () => {
-    setGrid((prev) =>
-      prev.map((row, i) =>
-        row.map((cell, j) => ({
-          ...cell,
-          value: cell.isBlack ? "#" : SOLUTION[i][j]
-        }))
-      )
-    );
-    toast.success("Puzzle solved!");
+  context.onload = () => {
+    context.data = {
+      grid,
+      CLUES
+    };
   };
 
-  const copyState = () => {
-    const currentState = JSON.stringify(
-      grid.map((row) => row.map((cell) => cell.value || "_")),
-      null,
-      4
-    );
-    navigator.clipboard.writeText(currentState);
-    toast.success("Current state copied to clipboard!");
-  };
+  context.setActionHandler("open", () => {
+    context.data = {
+      grid,
+      CLUES
+    };
+  });
 
-  context.setData({
-    grid,
-    CLUES
+  interface IFillAction {
+    direction: "across" | "down";
+    num: number;
+    value: string;
+  }
+
+  context.defineAction("fill", {
+    parameters: {
+      type: "object",
+      properties: {
+        value: {
+          type: "string"
+        },
+        direction: {
+          type: "string"
+        },
+        num: {
+          type: "integer"
+        }
+      },
+      required: ["value", "direction", "num"],
+      description: "The value to be filled in the given slot"
+    }
+  });
+
+  context.setActionHandler("fill", ({ direction, num, value }: IFillAction) => {
+    setGrid((prevGrid) => {
+      const newGrid = prevGrid.map((row) => row.map((cell) => ({ ...cell })));
+
+      // Find the starting position of the clue
+      let startRow = -1;
+      let startCol = -1;
+      for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
+          if (NUMBER_POSITIONS[i][j] === num) {
+            startRow = i;
+            startCol = j;
+            break;
+          }
+        }
+        if (startRow !== -1) break;
+      }
+
+      if (startRow === -1 || startCol === -1) return prevGrid; // Invalid clue number
+
+      // Fill the word from the solution
+      if (direction === "across") {
+        let col = startCol;
+        while (col < COLS && !newGrid[startRow][col].isBlack) {
+          newGrid[startRow][col].value = SOLUTION[startRow][col];
+          col++;
+        }
+      } else if (direction === "down") {
+        let row = startRow;
+        while (row < ROWS && !newGrid[row][startCol].isBlack) {
+          newGrid[row][startCol].value = SOLUTION[row][startCol];
+          row++;
+        }
+      }
+
+      return newGrid;
+    });
   });
 
   return (
@@ -256,23 +307,10 @@ const CrosswordGame: React.FC = () => {
 
         <div className="flex justify-center space-x-4">
           <button
-            onClick={solvePuzzle}
-            className="px-6 py-2 bg-crossword-accent text-white rounded-md
-              hover:bg-opacity-90 transition-colors duration-200 animate-slide-up">
-            Solve Puzzle
-          </button>
-          <button
             onClick={resetPuzzle}
-            className="px-6 py-2 bg-destructive text-white rounded-md
+            className="px-6 py-2 bg-destructive text-white bg-slate-600 rounded-md
               hover:bg-opacity-90 transition-colors duration-200 animate-slide-up">
             Reset
-          </button>
-          <button
-            onClick={copyState}
-            className="px-6 py-2 border-2 border-crossword-accent text-crossword-accent
-              rounded-md hover:bg-crossword-accent hover:text-white transition-colors
-              duration-200 animate-slide-up">
-            Copy State
           </button>
         </div>
       </div>
