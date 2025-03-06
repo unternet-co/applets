@@ -1,6 +1,6 @@
 {
   "name": "Crossword",
-  "description": "",
+  "description": "This is a crossword app, where the user can play a crossword game.",
   "icons": [
     {
       "src": "icon-72x72.png"
