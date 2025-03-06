@@ -1,0 +1,16 @@
+{
+  "name": "Crossword",
+  "description": "",
+  "icons": [
+    {
+      "src": "icon-72x72.png"
+    }
+  ],
+  "actions": [
+    {
+      "id": "open",
+      "description": "Fetches the crossword puzzle",
+      "parameters": {}
+    }
+  ]
+}
