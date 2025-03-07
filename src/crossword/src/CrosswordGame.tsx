@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { toast } from 'sonner';
-import { applets } from '@web-applets/sdk';
+import React, { useState, useRef, useEffect } from "react";
+import { toast } from "sonner";
+import { applets } from "@web-applets/sdk";
 
 const self = applets.register();
 
@@ -11,32 +11,42 @@ interface CrosswordCell {
 }
 
 const SOLUTION = [
-  ['#', '#', '#', 'b', 'a', 'm'],
-  ['o', 'h', 'b', 'a', 'b', 'y'],
-  ['d', 'o', 'u', 'b', 'l', 'e'],
-  ['d', 'e', 'c', 'k', 'e', 'r'],
-  ['#', '#', '#', 'a', 'd', 's'],
+  ["#", "#", "#", "b", "a", "m"],
+  ["o", "h", "b", "a", "b", "y"],
+  ["d", "o", "u", "b", "l", "e"],
+  ["d", "e", "c", "k", "e", "r"],
+  ["#", "#", "#", "a", "d", "s"]
 ];
+
+const ROW_SOLUTIONS = SOLUTION.map((row) =>
+  row.filter((cell) => cell !== "#")
+).map((letters) => letters.join(""));
+
+const COLUMN_SOLUTIONS = Array.from({ length: SOLUTION[0].length }, (_, colIndex) =>
+  SOLUTION.map((row) => row[colIndex]).filter((cell) => cell !== "#").join("")
+);
+
+const SOLUTION_WORDS = ROW_SOLUTIONS.concat(COLUMN_SOLUTIONS);
 
 const ROWS = SOLUTION.length;
 const COLS = SOLUTION[0].length;
 
 const CLUES = {
   across: {
-    1: 'Sound of hard impact',
-    4: 'Hoo-wee!',
-    7: 'With 8-Across, kind of bus associated with London',
-    8: 'See 7-Across',
-    9: "Sponsored posts in one's newsfeed, e.g.",
+    1: "Sound of hard impact",
+    4: "Hoo-wee!",
+    7: "With 8-Across, kind of bus associated with London",
+    8: "See 7-Across",
+    9: "Sponsored posts in one's newsfeed, e.g."
   },
   down: {
     1: 'Dessert described as "half-bread, half-cake"',
-    2: 'Having a full range of physical or mental abilities',
-    3: 'Mike who played Austin Powers',
-    4: 'Quirky',
-    5: 'Garden tool used for weeding',
-    6: 'Tampa Bay football player, for short',
-  },
+    2: "Having a full range of physical or mental abilities",
+    3: "Mike who played Austin Powers",
+    4: "Quirky",
+    5: "Garden tool used for weeding",
+    6: "Tampa Bay football player, for short"
+  }
 };
 
 const NUMBER_POSITIONS = [
@@ -44,32 +54,32 @@ const NUMBER_POSITIONS = [
   [4, 5, 6, 0, 0, 0],
   [7, 0, 0, 0, 0, 0],
   [8, 0, 0, 0, 0, 0],
-  [0, 0, 0, 9, 0, 0],
+  [0, 0, 0, 9, 0, 0]
 ];
 
 const CrosswordGame: React.FC = () => {
   const [grid, setGrid] = useState<CrosswordCell[][]>(() =>
     SOLUTION.map((row, i) =>
       row.map((cell, j) => ({
-        value: '',
-        isBlack: cell === '#',
-        number: NUMBER_POSITIONS[i][j] || undefined,
+        value: "",
+        isBlack: cell === "#",
+        number: NUMBER_POSITIONS[i][j] || undefined
       }))
     )
   );
 
   self.data = {
     instructions:
-      'IMPORTANT: Your job is to help, not reveal answers. If the user asks for help, give at least three hints before revealing the answer, but only reveal one at a time. If the user guesses right, then fill it in.',
+      "IMPORTANT: Your job is to help, not reveal answers. If the user asks for help, give at least three hints before revealing the answer, but only reveal one at a time. If the user guesses right, then fill it in.",
     grid,
     CLUES,
-    SOLUTION,
+    SOLUTION_WORDS
   };
 
   const [selectedCell, setSelectedCell] = useState<[number, number] | null>(
     null
   );
-  const [highlightMode, setHighlightMode] = useState<'row' | 'column' | null>(
+  const [highlightMode, setHighlightMode] = useState<"row" | "column" | null>(
     null
   );
   const gridRefs = useRef<(HTMLInputElement | null)[][]>(
@@ -82,25 +92,25 @@ const CrosswordGame: React.FC = () => {
     setGrid(
       SOLUTION.map((row, i) =>
         row.map((cell, j) => ({
-          value: '',
-          isBlack: cell === '#',
-          number: NUMBER_POSITIONS[i][j] || undefined,
+          value: "",
+          isBlack: cell === "#",
+          number: NUMBER_POSITIONS[i][j] || undefined
         }))
       )
     );
     setSelectedCell(null);
     setHighlightMode(null);
-    toast.success('Puzzle reset!');
+    toast.success("Puzzle reset!");
   };
 
   const findNextEmptyCell = (startRow: number, startCol: number) => {
-    if (highlightMode === 'row') {
+    if (highlightMode === "row") {
       for (let j = startCol + 1; j < ROWS; j++) {
         if (!grid[startRow][j].isBlack && !grid[startRow][j].value) {
           return [startRow, j];
         }
       }
-    } else if (highlightMode === 'column') {
+    } else if (highlightMode === "column") {
       for (let i = startRow + 1; i < COLS; i++) {
         if (!grid[i][startCol].isBlack && !grid[i][startCol].value) {
           return [i, startCol];
@@ -118,7 +128,7 @@ const CrosswordGame: React.FC = () => {
       newGrid[row] = [...newGrid[row]];
       newGrid[row][col] = {
         ...newGrid[row][col],
-        value: value.toLowerCase(),
+        value: value.toLowerCase()
       };
       return newGrid;
     });
@@ -134,25 +144,25 @@ const CrosswordGame: React.FC = () => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, row: number, col: number) => {
-    if (e.key === 'Tab' || e.key === 'Enter') return;
+    if (e.key === "Tab" || e.key === "Enter") return;
 
-    if (e.key === 'ArrowRight' && col < 4) {
+    if (e.key === "ArrowRight" && col < 4) {
       gridRefs.current[row][col + 1]?.focus();
-    } else if (e.key === 'ArrowLeft' && col > 0) {
+    } else if (e.key === "ArrowLeft" && col > 0) {
       gridRefs.current[row][col - 1]?.focus();
-    } else if (e.key === 'ArrowUp' && row > 0) {
+    } else if (e.key === "ArrowUp" && row > 0) {
       gridRefs.current[row - 1][col]?.focus();
-    } else if (e.key === 'ArrowDown' && row < 4) {
+    } else if (e.key === "ArrowDown" && row < 4) {
       gridRefs.current[row + 1][col]?.focus();
     }
   };
 
   const handleCellClick = (row: number, col: number) => {
     if (selectedCell?.[0] === row && selectedCell?.[1] === col) {
-      setHighlightMode((prev) => (prev === 'row' ? 'column' : 'row'));
+      setHighlightMode((prev) => (prev === "row" ? "column" : "row"));
     } else {
       setSelectedCell([row, col]);
-      setHighlightMode('row');
+      setHighlightMode("row");
     }
   };
 
@@ -162,7 +172,7 @@ const CrosswordGame: React.FC = () => {
         return {
           value: i === rowIndex ? newValues[j] ?? cell.value : cell.value,
           isBlack: cell.isBlack,
-          number: cell.number,
+          number: cell.number
         };
       })
     );
@@ -172,42 +182,42 @@ const CrosswordGame: React.FC = () => {
     if (!selectedCell) return false;
     const [selectedRow, selectedCol] = selectedCell;
 
-    if (highlightMode === 'row') {
+    if (highlightMode === "row") {
       return i === selectedRow;
-    } else if (highlightMode === 'column') {
+    } else if (highlightMode === "column") {
       return j === selectedCol;
     }
     return false;
   };
 
   interface IFillAction {
-    direction: 'across' | 'down';
+    direction: "across" | "down";
     num: number;
     value: string;
   }
 
-  self.defineAction('fill', {
-    name: 'Fill',
-    description: 'Fill in a crossword cell',
+  self.defineAction("fill", {
+    name: "Fill",
+    description: "Fill in a crossword cell",
     params_schema: {
-      type: 'object',
+      type: "object",
       properties: {
         value: {
-          type: 'string',
+          type: "string"
         },
         direction: {
-          type: 'string',
+          type: "string"
         },
         num: {
-          type: 'integer',
-        },
+          type: "integer"
+        }
       },
-      required: ['value', 'direction', 'num'],
-      description: 'The value to be filled in the given slot',
-    },
+      required: ["value", "direction", "num"],
+      description: "The value to be filled in the given slot"
+    }
   });
 
-  self.setActionHandler('fill', ({ direction, num, value }: IFillAction) => {
+  self.setActionHandler("fill", ({ direction, num, value }: IFillAction) => {
     setGrid((prevGrid) => {
       const newGrid = prevGrid.map((row) => row.map((cell) => ({ ...cell })));
 
@@ -228,13 +238,13 @@ const CrosswordGame: React.FC = () => {
       if (startRow === -1 || startCol === -1) return prevGrid; // Invalid clue number
 
       // Fill the word from the solution
-      if (direction === 'across') {
+      if (direction === "across") {
         let col = startCol;
         while (col < COLS && !newGrid[startRow][col].isBlack) {
           newGrid[startRow][col].value = SOLUTION[startRow][col];
           col++;
         }
-      } else if (direction === 'down') {
+      } else if (direction === "down") {
         let row = startRow;
         while (row < ROWS && !newGrid[row][startCol].isBlack) {
           newGrid[row][startCol].value = SOLUTION[row][startCol];
@@ -291,7 +301,7 @@ const CrosswordGame: React.FC = () => {
                       onKeyDown={(e) => handleKeyDown(e, i, j)}
                       onClick={() => handleCellClick(i, j)}
                       className={`w-12 h-12 text-center text-lg font-medium focus:outline-none
-                        ${isHighlighted(i, j) ? 'bg-crossword-highlight' : ''}`}
+                        ${isHighlighted(i, j) ? "bg-crossword-highlight" : ""}`}
                       maxLength={1}
                     />
                   )}
