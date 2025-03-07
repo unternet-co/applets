@@ -4,10 +4,11 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@web-applets/sdk": "latest",
+    "@web-applets/sdk": "^0.2.0-alpha.9",
     "codeflask": "^1.4.1"
   },
   "devDependencies": {
-    "@types/codeflask": "^1.4.6"
+    "@types/codeflask": "^1.4.6",
+    "vite": "^6.2.1"
   }
 }

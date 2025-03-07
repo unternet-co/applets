@@ -1,0 +1,26 @@
+{
+  "name": "Maps",
+  "short_name": "Maps",
+  "description": "Search for and display locations on a map. Map data can contain: descriptions of places & businesses, reviews, opening hours, etc.",
+  "icons": [
+    {
+      "src": "icon-128x128.png"
+    }
+  ],
+  "actions": {
+    "search": {
+      "id": "search",
+      "description": "Search for locations with Google Maps",
+      "params_object": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The search query for locations on the map."
+          }
+        },
+        "required": ["query"]
+      }
+    }
+  }
+}
