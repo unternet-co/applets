@@ -222,6 +222,52 @@ const CrosswordGame: React.FC = () => {
   });
 
   self.setActionHandler("fill", ({ direction, num, value }: IFillAction) => {
+    const isValidFill = (
+      direction: "across" | "down",
+      num: number,
+      value: string
+    ) => {
+      let startRow = -1;
+      let startCol = -1;
+      for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
+          if (NUMBER_POSITIONS[i][j] === num) {
+            startRow = i;
+            startCol = j;
+            break;
+          }
+        }
+        if (startRow !== -1) break;
+      }
+
+      if (startRow === -1 || startCol === -1) return false; // Invalid clue number
+
+      if (direction === "across") {
+        let col = startCol;
+        let letterCount = 0;
+        while (col < COLS && !grid[startRow][col].isBlack) {
+          letterCount++;
+          col++;
+        }
+        return letterCount === value.length;
+      } else if (direction === "down") {
+        let row = startRow;
+        let letterCount = 0;
+        while (row < ROWS && !grid[row][startCol].isBlack) {
+          letterCount++;
+          row++;
+        }
+        return letterCount === value.length;
+      }
+
+      return false;
+    };
+
+    if (!isValidFill(direction, num, value)) {
+      // TODO: Return error here
+      return;
+    }
+
     setGrid((prevGrid) => {
       const newGrid = prevGrid.map((row) => row.map((cell) => ({ ...cell })));
 
