@@ -22,8 +22,12 @@ const ROW_SOLUTIONS = SOLUTION.map((row) =>
   row.filter((cell) => cell !== "#")
 ).map((letters) => letters.join(""));
 
-const COLUMN_SOLUTIONS = Array.from({ length: SOLUTION[0].length }, (_, colIndex) =>
-  SOLUTION.map((row) => row[colIndex]).filter((cell) => cell !== "#").join("")
+const COLUMN_SOLUTIONS = Array.from(
+  { length: SOLUTION[0].length },
+  (_, colIndex) =>
+    SOLUTION.map((row) => row[colIndex])
+      .filter((cell) => cell !== "#")
+      .join("")
 );
 
 const SOLUTION_WORDS = ROW_SOLUTIONS.concat(COLUMN_SOLUTIONS);
@@ -237,18 +241,24 @@ const CrosswordGame: React.FC = () => {
 
       if (startRow === -1 || startCol === -1) return prevGrid; // Invalid clue number
 
-      // Fill the word from the solution
+      // Fill the word with the provided value
       if (direction === "across") {
         let col = startCol;
-        while (col < COLS && !newGrid[startRow][col].isBlack) {
-          newGrid[startRow][col].value = SOLUTION[startRow][col];
-          col++;
+        for (
+          let k = 0;
+          k < value.length && col < COLS && !newGrid[startRow][col].isBlack;
+          k++, col++
+        ) {
+          newGrid[startRow][col].value = value[k];
         }
       } else if (direction === "down") {
         let row = startRow;
-        while (row < ROWS && !newGrid[row][startCol].isBlack) {
-          newGrid[row][startCol].value = SOLUTION[row][startCol];
-          row++;
+        for (
+          let k = 0;
+          k < value.length && row < ROWS && !newGrid[row][startCol].isBlack;
+          k++, row++
+        ) {
+          newGrid[row][startCol].value = value[k];
         }
       }
 
