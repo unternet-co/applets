@@ -18,19 +18,74 @@ const SOLUTION = [
   ["#", "#", "#", "a", "d", "s"]
 ];
 
-const ROW_SOLUTIONS = SOLUTION.map((row) =>
-  row.filter((cell) => cell !== "#")
-).map((letters) => letters.join(""));
-
-const COLUMN_SOLUTIONS = Array.from(
-  { length: SOLUTION[0].length },
-  (_, colIndex) =>
-    SOLUTION.map((row) => row[colIndex])
-      .filter((cell) => cell !== "#")
-      .join("")
-);
-
-const SOLUTION_WORDS = ROW_SOLUTIONS.concat(COLUMN_SOLUTIONS);
+const WORDS = [
+  {
+    index: 1,
+    direction: "across",
+    clue: "Sound of hard impact",
+    answer: "bam"
+  },
+  {
+    index: 4,
+    direction: "across",
+    clue: "Hoo-wee!",
+    answer: "whew"
+  },
+  {
+    index: 7,
+    direction: "across",
+    clue: "With 8-Across, kind of bus associated with London",
+    answer: "double"
+  },
+  {
+    index: 8,
+    direction: "across",
+    clue: "See 7-Across",
+    answer: "decker"
+  },
+  {
+    index: 9,
+    direction: "across",
+    clue: `Sponsored posts in one's newsfeed, e.g.`,
+    answer: "ad"
+  },
+  {
+    index: 1,
+    direction: "down",
+    clue: 'Dessert described as "half-bread, half-cake"',
+    answer: "brownie"
+  },
+  {
+    index: 2,
+    direction: "down",
+    clue: "Having a full range of physical or mental abilities",
+    answer: "able"
+  },
+  {
+    index: 3,
+    direction: "down",
+    clue: "Mike who played Austin Powers",
+    answer: "myers"
+  },
+  {
+    index: 4,
+    direction: "down",
+    clue: "Quirky",
+    answer: "offbeat"
+  },
+  {
+    index: 5,
+    direction: "down",
+    clue: "Garden tool used for weeding",
+    answer: "hoe"
+  },
+  {
+    index: 6,
+    direction: "down",
+    clue: "Tampa Bay football player, for short",
+    answer: "buc"
+  }
+];
 
 const ROWS = SOLUTION.length;
 const COLS = SOLUTION[0].length;
@@ -76,8 +131,7 @@ const CrosswordGame: React.FC = () => {
     instructions:
       "IMPORTANT: Your job is to help, not reveal answers. If the user asks for help, give at least three hints before revealing the answer, but only reveal one at a time. If the user guesses right, then fill it in.",
     grid,
-    CLUES,
-    SOLUTION_WORDS
+    words: WORDS
   };
 
   const [selectedCell, setSelectedCell] = useState<[number, number] | null>(
@@ -227,40 +281,10 @@ const CrosswordGame: React.FC = () => {
       num: number,
       value: string
     ) => {
-      let startRow = -1;
-      let startCol = -1;
-      for (let i = 0; i < ROWS; i++) {
-        for (let j = 0; j < COLS; j++) {
-          if (NUMBER_POSITIONS[i][j] === num) {
-            startRow = i;
-            startCol = j;
-            break;
-          }
-        }
-        if (startRow !== -1) break;
-      }
-
-      if (startRow === -1 || startCol === -1) return false; // Invalid clue number
-
-      if (direction === "across") {
-        let col = startCol;
-        let letterCount = 0;
-        while (col < COLS && !grid[startRow][col].isBlack) {
-          letterCount++;
-          col++;
-        }
-        return letterCount === value.length;
-      } else if (direction === "down") {
-        let row = startRow;
-        let letterCount = 0;
-        while (row < ROWS && !grid[row][startCol].isBlack) {
-          letterCount++;
-          row++;
-        }
-        return letterCount === value.length;
-      }
-
-      return false;
+      const word = WORDS.find(
+        (w) => w.direction === direction && w.index === num
+      );
+      return word ? word.answer === value : false;
     };
 
     if (!isValidFill(direction, num, value)) {
