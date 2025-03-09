@@ -11,7 +11,7 @@
     "search": {
       "id": "search",
       "description": "Search for locations with Google Maps",
-      "params_object": {
+      "params_schema": {
         "type": "object",
         "properties": {
           "query": {
