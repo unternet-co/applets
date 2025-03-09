@@ -329,7 +329,9 @@ const CrosswordGame: React.FC = () => {
             <h3 className="text-sm font-medium text-gray-500 mb-4">Across</h3>
             {Object.entries(WORDS_ACROSS).map(([number, word]) => (
               <div key={`across-${number}`} className="mb-2">
-                <span className="font-medium mr-2">{number}.</span>
+                <span className="font-medium mr-2">
+                  {parseInt(number) + 1}.
+                </span>
                 {word.clue}
               </div>
             ))}
@@ -338,7 +340,9 @@ const CrosswordGame: React.FC = () => {
             <h3 className="text-sm font-medium text-gray-500 mb-4">Down</h3>
             {Object.entries(WORDS_DOWN).map(([number, word]) => (
               <div key={`down-${number}`} className="mb-2">
-                <span className="font-medium mr-2">{number}.</span>
+                <span className="font-medium mr-2">
+                  {parseInt(number) + 1}.
+                </span>
                 {word.clue}
               </div>
             ))}
