@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.8",
-    "@web-applets/sdk": "latest"
+    "@web-applets/sdk": "^0.2.0-alpha.9"
   },
   "devDependencies": {
     "@types/google.maps": "^3.58.1",

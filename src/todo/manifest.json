@@ -1,0 +1,41 @@
+{
+  "name": "Todo",
+  "short_name": "Todo",
+  "description": "To-do lists",
+  "icons": [
+    {
+      "src": "icon-256x256.png"
+    }
+  ],
+  "entrypoint": "index.html",
+  "actions": {
+    "addtodos": {
+      "description": "Create a to-do list from a series of items",
+      "params_schema": {
+        "type": "object",
+        "properties": {
+          "todos": {
+            "type": "array",
+            "description": "A list of strings.",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["todos"]
+      }
+    },
+    "completetodos": {
+      "description": "Complete one or more items from the to-do list",
+      "params_schema": {
+        "type": "object",
+        "properties": {
+          "indices": {
+            "type": "array",
+            "description": "A list of indexes referencing the todos to check off.",
+            "items": { "type": "number" }
+          }
+        },
+        "required": ["indices"]
+      }
+    }
+  }
+}
