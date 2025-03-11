@@ -4,7 +4,7 @@
   "description": "Unternet's official applets, which can be used anywhere the Web Applets protocol is implemented.",
   "author": "Rupert Manfredi <rupert@unternet.co>",
   "scripts": {
-    "build": "node scripts/build.js"
+    "build": "npm install && node scripts/build.js"
   },
   "license": "MIT",
   "devDependencies": {
