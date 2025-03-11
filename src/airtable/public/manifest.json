@@ -1,0 +1,145 @@
+{
+  "name": "Airtable",
+  "description": "Airtable WIP integration",
+  "icons": [
+    {
+      "src": "icon-128x128.png"
+    }
+  ],
+  "actions": {
+    "list_records": {
+      "description": "List the records",
+      "params_schema": {
+        "type": "object",
+        "properties": {
+          "tableIdOrName": {
+            "type": "string"
+          }
+        },
+        "required": ["tableIdOrName"]
+      }
+    },
+    "get_record": {
+      "description": "Get a single record",
+      "params_schema": {
+        "type": "object",
+        "properties": {
+          "recordId": {
+            "type": "string"
+          },
+          "tableIdOrName": {
+            "type": "string"
+          }
+        },
+        "required": ["recordId", "tableIdOrName"]
+      }
+    },
+    "create_record": {
+      "description": "Create a single record",
+      "params_schema": {
+        "type": "object",
+        "properties": {
+          "fields": {
+            "type": "any"
+          },
+          "tableIdOrName": {
+            "type": "string"
+          }
+        },
+        "required": ["fields", "tableIdOrName"]
+      }
+    },
+    "update_record": {
+      "description": "Update a single record",
+      "params_schema": {
+        "type": "object",
+        "properties": {
+          "recordId": {
+            "type": "string"
+          },
+          "fields": {
+            "type": "any"
+          },
+          "tableIdOrName": {
+            "type": "string"
+          }
+        },
+        "required": ["recordId", "fields", "tableIdOrName"]
+      }
+    },
+    "delete_record": {
+      "description": "Delete a single record",
+      "params_schema": {
+        "type": "object",
+        "properties": {
+          "recordId": {
+            "type": "string"
+          },
+          "tableIdOrName": {
+            "type": "string"
+          }
+        },
+        "required": ["recordId", "tableIdOrName"]
+      }
+    },
+    "list_comments": {
+      "description": "List comments for a record",
+      "params_schema": {
+        "type": "object",
+        "properties": {
+          "recordId": {
+            "type": "string"
+          },
+          "tableIdOrName": {
+            "type": "string"
+          },
+          "pageSize": {
+            "type": "number"
+          },
+          "offset": {
+            "type": "string"
+          }
+        },
+        "required": ["recordId", "tableIdOrName"]
+      }
+    },
+    "create_comment": {
+      "description": "Create a comment for a record",
+      "params_schema": {
+        "type": "object",
+        "properties": {
+          "recordId": { "type": "string" },
+          "tableIdOrName": { "type": "string" },
+          "text": { "type": "string" },
+          "parentCommentId": { "type": "string" }
+        },
+        "required": ["recordId", "tableIdOrName", "text"]
+      }
+    },
+    "update_comment": {
+      "description": "Update a comment for a record",
+      "params_schema": {
+        "type": "object",
+        "properties": {
+          "recordId": { "type": "string" },
+          "tableIdOrName": { "type": "string" },
+          "rowCommentId": { "type": "string" },
+          "text": { "type": "string" }
+        },
+        "required": ["recordId", "tableIdOrName", "rowCommentId", "text"]
+      }
+    },
+    "delete_comment": {
+      "description": "Delete a comment from a record",
+      "params_schema": {
+        "type": "object",
+        "properties": {
+          "recordId": { "type": "string" },
+          "tableIdOrName": { "type": "string" },
+          "rowCommentId": { "type": "string" }
+        },
+        "required": ["recordId", "tableIdOrName", "rowCommentId"]
+      }
+    }
+  }
+}
