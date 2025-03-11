@@ -5,7 +5,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@web-applets/sdk": "^0.2.0-alpha.9",
+    "@web-applets/sdk": "^0.2.4",
     "quill": "^2.0.3",
     "quilljs-markdown": "^1.2.0"
   },
