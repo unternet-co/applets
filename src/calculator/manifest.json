@@ -1,0 +1,26 @@
+{
+  "name": "Calculator",
+  "short_name": "Calc",
+  "description": "Calculate something precisely",
+  "icons": [
+    {
+      "src": "icon-512x512.png"
+    }
+  ],
+  "entrypoint": "index.html",
+  "actions": {
+    "calculate": {
+      "description": "Calculate an expression, or short piece of mathematical code",
+      "params_schema": {
+        "type": "object",
+        "properties": {
+          "expr": {
+            "type": "string",
+            "description": "A valid javascript expression to evaluate, no other text but javascript."
+          }
+        },
+        "required": ["expr"]
+      }
+    }
+  }
+}

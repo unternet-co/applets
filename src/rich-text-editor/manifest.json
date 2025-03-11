@@ -1,0 +1,39 @@
+{
+  "name": "Rich Text Editor",
+  "short_name": "Rich Text",
+  "description": "A rich text editor, for creating documents and notes, useful whenever the user needs to draft or reference text in any way.",
+  "icons": [
+    {
+      "src": "icon-512x512.png"
+    }
+  ],
+  "entrypoint": "index.html",
+  "actions": {
+    "write": {
+      "description": "Writes output to the editor. Use this whenever the user is writing or revising text-based content. Will overwrite the editor content if any. Good for editing and revising existing documents, or creating a new one from scratch.",
+      "params_schema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "description": "The text to write to the document, in a simple HTML string.",
+            "type": "string"
+          }
+        },
+        "required": ["text"]
+      }
+    },
+    "append": {
+      "description": "Append the output to the current editor content. Good for adding things on to existing notes and documents.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "description": "The text to write to the document, in a simple HTML string",
+            "type": "string"
+          }
+        },
+        "required": ["text"]
+      }
+    }
+  }
+}

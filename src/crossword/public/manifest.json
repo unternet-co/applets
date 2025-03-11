@@ -1,0 +1,16 @@
+{
+  "name": "Crossword",
+  "description": "This is a crossword app, where the user can play a crossword game.",
+  "icons": [
+    {
+      "src": "icon-72x72.png"
+    }
+  ],
+  "actions": [
+    {
+      "id": "open",
+      "description": "Fetches the crossword puzzle",
+      "parameters": {}
+    }
+  ]
+}
