@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@unternet/sdk": "^0.01.0",
-    "@web-applets/sdk": "^0.2.0-alpha.9"
+    "@web-applets/sdk": "^0.2.4"
   },
   "devDependencies": {
     "vite": "^5.4.9"
