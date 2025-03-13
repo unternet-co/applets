@@ -1,11 +1,10 @@
 import { applets } from '@web-applets/sdk';
-import Quill from 'quill';
-import QuillMarkdown from 'quilljs-markdown';
-import 'quill/dist/quill.snow.css';
+import Editor from '@toast-ui/editor';
+import '@toast-ui/editor/dist/toastui-editor.css';
 
 const self = applets.register();
 self.data = {
-  hint: 'Your job is to collaborate with the user to draft a document. You can respond to user commands by writing or appending something to the editor, or by engaging in clarifying communication/follow-up questions if appropriate. ONLY use HTML for actions like `append` and `write`, not conversational text responses (text messages should be plain text).',
+  hint: 'Your job is to collaborate with the user to draft a document. You can respond to user commands by writing or appending something to the editor, or by engaging in clarifying communication/follow-up questions if appropriate. ONLY use HTML for actions like `append` and `write`, not conversational text responses (text messages should be plain text). When using actions be aware that you can use rich text.',
 };
 
 const editorElement = document.getElementById('editor')!;
@@ -16,40 +15,38 @@ self.setActionHandler('write', ({ text }) => {
 });
 
 self.setActionHandler('append', ({ text }) => {
-  const currentContent = editor.getSemanticHTML();
+  const currentContent = editor.getMarkdown();
   self.data = { text: currentContent + text, source: 'applet' };
 });
 
 self.ondata = () => {
-  if (self.data.text && self.data.text !== editor.getSemanticHTML()) {
-    /** We only want to update the editor if the change came from outside the editor */
-    /** Disable the editor while pasting so that it doesn't steal focus */
-    editor.disable();
-    editor.clipboard.dangerouslyPasteHTML(self.data.text);
-    editor.enable();
+  // If the external data is different from the current editor content,
+  // update the editor.
+  if (self.data.text && self.data.text !== editor.getMarkdown()) {
+    editor.setMarkdown(self.data.text);
   }
 };
 
-editor.on('text-change', (_, __, source) => {
+// Listen to changes in the editor and update the applet data accordingly.
+editor.on('change', () => {
   console.log('text change');
-  self.data = { text: editor.getSemanticHTML() };
+  self.data = { text: editor.getMarkdown() };
 });
 
 function loadEditor(element: HTMLElement) {
-  const quill = new Quill(element, {
-    theme: 'snow',
-    modules: {
-      toolbar: [
-        [{ header: [1, 2, 3, false] }],
-        ['bold', 'italic', 'underline', 'strike'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        ['blockquote', 'code-block'],
-        ['link'],
-      ],
-    },
+  const editor = Editor.factory({
+    el: element,
+    height: '100%',
+    initialEditType: 'markdown',
+    previewStyle: 'vertical',
+    toolbarItems: [
+      ['heading', 'bold', 'italic', 'strike'],
+      ['hr', 'quote'],
+      ['ul', 'ol', 'task', 'indent', 'outdent'],
+      ['table', 'image', 'link'],
+      ['code', 'codeblock'],
+      ['scrollSync'],
+    ],
   });
-
-  new QuillMarkdown(quill);
-
-  return quill;
+  return editor;
 }
