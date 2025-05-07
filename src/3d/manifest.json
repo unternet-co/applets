@@ -1,0 +1,25 @@
+{
+  "name": "3D Generator",
+  "short_name": "3D",
+  "description": "Create & interact with 3D worlds using A-Frame.",
+  "icons": [
+    {
+      "src": "/icon.png"
+    }
+  ],
+  "actions": {
+    "generate_scene": {
+      "description": "Generate a 3D scene based on the user's query",
+      "params_schema": {
+        "type": "object",
+        "properties": {
+          "html": {
+            "type": "string",
+            "description": "A string of valid A-Frame code, which describes the scene requested by the user."
+          }
+        },
+        "required": ["html"]
+      }
+    }
+  }
+}
