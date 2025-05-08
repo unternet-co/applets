@@ -4,7 +4,7 @@
   "description": "Create & interact with 3D worlds using A-Frame.",
   "icons": [
     {
-      "src": "/icon.png"
+      "src": "icon.png"
     }
   ],
   "actions": {
