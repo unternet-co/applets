@@ -1,0 +1,20 @@
+{
+  "name": "Spreadsheet",
+  "short_name": "Spreadsheet",
+  "description": "Work with data in the shape of a spreadsheet.",
+  "entrypoint": "index.html",
+  "actions": {
+    "render": {
+      "description": "Render a spreadsheet. Supports all the Handsontable options.",
+      "params_schema": {
+        "type": "array",
+        "properties": {
+          "data": {
+            "description": "An array containing the rows in the spreadsheet. Each array item can be an array or an object representing the columns."
+          }
+        },
+        "required": ["data"]
+      }
+    }
+  }
+}
