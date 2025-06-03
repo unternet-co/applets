@@ -6,19 +6,6 @@ import "handsontable/styles/ht-theme-main.min.css";
 import { HyperFormula } from "hyperformula";
 import { applets } from "@web-applets/sdk";
 
-// REGISTER
-
-const scope = applets.register();
-
-scope.data = [];
-
-// ACTIONS
-
-scope.setActionHandler("render", (props: Handsontable.GridSettings) => {
-  scope.data = props.data;
-  render(props);
-});
-
 // UI
 
 let hot: Handsontable | undefined;
@@ -27,13 +14,14 @@ const hyperformulaInstance = HyperFormula.buildEmpty({
   licenseKey: "internal-use-in-handsontable",
 });
 
-// Render empty grid
-render({ data: [[""]] });
-
 function render(props: Handsontable.GridSettings) {
+  if (typeof props !== "object" || !("data" in props)) return;
+
   const container = document.getElementById("root");
   if (!container) return;
   if (hot) hot.destroy();
+
+  console.log("RENDERING", JSON.stringify(props));
 
   hot = new Handsontable(container, {
     formulas: { engine: hyperformulaInstance },
@@ -54,5 +42,27 @@ function render(props: Handsontable.GridSettings) {
     rowHeaders: true,
 
     ...props,
+    data: props.data?.length === 0 ? [[""]] : props.data,
   });
 }
+
+// REGISTER
+
+render({ data: [] });
+
+const scope = applets.register<Handsontable.GridSettings>();
+
+scope.data = {
+  data: [],
+};
+
+scope.ondata = (event) => {
+  console.log("🔮", event.data);
+  render(event.data);
+};
+
+// ACTIONS
+
+scope.setActionHandler("render", (props: Handsontable.GridSettings) => {
+  scope.data = { ...props };
+});
