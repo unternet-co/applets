@@ -21,8 +21,6 @@ function render(props: Handsontable.GridSettings) {
   if (!container) return;
   if (hot) hot.destroy();
 
-  console.log("RENDERING", JSON.stringify(props));
-
   hot = new Handsontable(container, {
     formulas: { engine: hyperformulaInstance },
     height: "auto",
@@ -57,7 +55,6 @@ scope.data = {
 };
 
 scope.ondata = (event) => {
-  console.log("🔮", event.data);
   render(event.data);
 };
 
