@@ -60,6 +60,12 @@ scope.ondata = (event) => {
 
 // ACTIONS
 
-scope.setActionHandler("render", (props: Handsontable.GridSettings) => {
+scope.setActionHandler("insertrow", ({ amount, index }: { amount?: number; index?: number }) => {
+  const action = index === 0 ? "insert_row_above" : "insert_row_below";
+
+  hot?.alter(action, index !== undefined ? Math.max(index - 1, 0) : undefined, amount || 1);
+});
+
+scope.setActionHandler("supply", (props: Handsontable.GridSettings) => {
   scope.data = { ...props };
 });

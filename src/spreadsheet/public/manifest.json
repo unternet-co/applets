@@ -4,14 +4,14 @@
   "description": "Work with data in the shape of a spreadsheet.",
   "entrypoint": "index.html",
   "actions": {
-    "render": {
-      "description": "Render a spreadsheet. Supports all the Handsontable options.",
+    "supply": {
+      "description": "Supply data and options for the spreadsheet. Supports all the Handsontable options. Clears all existing data and options. MODEL: Do not use this automatically after another action.",
       "params_schema": {
         "type": "object",
         "properties": {
           "data": {
             "type": "array",
-            "description": "An array containing the rows in the spreadsheet. Each array item can be an array or an object representing the columns.",
+            "description": "An array containing the initial rows in the spreadsheet. Each array item can be an array or an object representing the columns. Pass in an array with empty strings for each empty column.",
             "items": {}
           },
           "colHeaders": {
