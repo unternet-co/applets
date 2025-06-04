@@ -28,16 +28,23 @@ function render(props: Handsontable.GridSettings) {
 
     allowInsertColumn: true,
     allowInsertRow: true,
+    allowRemoveColumn: true,
+    allowRemoveRow: true,
     colHeaders: true,
     columnSorting: true,
     contextMenu: true,
     customBorders: true,
-    dropdownMenu: true,
+    // dropdownMenu: true,
     filters: true,
     manualRowMove: true,
     // minSpareCols: 3,
     // minSpareRows: 3,
     rowHeaders: true,
+
+    numericFormat: {
+      pattern: "0,00",
+      culture: "en-US",
+    },
 
     ...props,
     data: props.data?.length === 0 ? [[""]] : props.data,

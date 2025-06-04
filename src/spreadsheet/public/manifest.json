@@ -16,6 +16,43 @@
           },
           "colHeaders": {
             "description": "Optional column names."
+          },
+          "columns": {
+            "type": "array",
+            "description": "Specify the type and other configuration options for each individual column",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "autocomplete",
+                    "checkbox",
+                    "date",
+                    "dropdown",
+                    "handsontable",
+                    "numeric",
+                    "password",
+                    "text",
+                    "time"
+                  ]
+                },
+                "numericFormat": {
+                  "type": "object",
+                  "properties": {
+                    "culture": {
+                      "type": "string",
+                      "description": "Specify the language to use the currency format of, eg. `en-US`"
+                    },
+                    "pattern": {
+                      "type": "string",
+                      "description": "Specify the numeric pattern to use, eg. `0,0` or for decimal values `0,0.00`"
+                    }
+                  }
+                }
+              },
+              "required": ["type"]
+            }
           }
         },
         "required": ["data"]
