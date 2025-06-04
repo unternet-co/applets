@@ -1,0 +1,18 @@
+{
+  "insertrow": {
+    "description": "Insert a row.",
+    "params_schema": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "Amount of rows to insert."
+        },
+        "index": {
+          "type": "number",
+          "description": "At which one-based index to insert the rows. Not passing the index inserts the rows at the end; and passing zero inserts them at the start/top. Otherwise, rows will be inserted AFTER the one-based index."
+        }
+      }
+    }
+  }
+}

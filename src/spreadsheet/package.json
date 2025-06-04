@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
+  },
+  "dependencies": {
+    "@web-applets/sdk": "^0.2.5",
+    "handsontable": "^15.3.0",
+    "hyperformula": "^3.0.0"
+  }
+}
