@@ -3,6 +3,11 @@
   "short_name": "Spreadsheet",
   "description": "Work with data in the shape of a spreadsheet.",
   "entrypoint": "index.html",
+  "icons": [
+    {
+      "src": "icon-128x128.png"
+    }
+  ],
   "actions": {
     "supply": {
       "description": "Supply data and options for the spreadsheet. Supports all the Handsontable options. Clears all existing data and options. MODEL: Do not use this automatically after another action.",
