@@ -3,7 +3,7 @@
   "description": "This is a crossword app, where the user can play a crossword game.",
   "icons": [
     {
-      "src": "/crossword/icon-286x286.png"
+      "src": "icon-286x286.png"
     }
   ],
   "actions": [

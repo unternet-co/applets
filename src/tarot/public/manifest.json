@@ -4,7 +4,7 @@
   "description": "Draw tarot cards & predict your fortune.",
   "icons": [
     {
-      "src": "/tarot/icon-128x128.png"
+      "src": "icon-128x128.png"
     }
   ],
   "actions": {
