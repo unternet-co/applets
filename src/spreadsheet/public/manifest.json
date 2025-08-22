@@ -5,7 +5,7 @@
   "entrypoint": "index.html",
   "icons": [
     {
-      "src": "icon-128x128.png"
+      "src": "/spreadsheet/icon-128x128.png"
     }
   ],
   "actions": {

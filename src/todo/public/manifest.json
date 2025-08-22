@@ -4,7 +4,7 @@
   "description": "To-do lists",
   "icons": [
     {
-      "src": "icon-256x256.png"
+      "src": "/todo/icon-256x256.png"
     }
   ],
   "entrypoint": "index.html",
