@@ -4,7 +4,7 @@
   "description": "Search for and display locations on a map. Map data can contain: descriptions of places & businesses, reviews, opening hours, etc.",
   "icons": [
     {
-      "src": "/maps/icon-128x128.png"
+      "src": "icon-128x128.png"
     }
   ],
   "actions": {

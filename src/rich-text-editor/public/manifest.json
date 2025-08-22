@@ -4,7 +4,7 @@
   "description": "A rich text editor, for creating documents and notes, useful whenever the user needs to draft or reference text in any way.",
   "icons": [
     {
-      "src": "/rich-text-editor/icon-512x512.png"
+      "src": "icon-512x512.png"
     }
   ],
   "entrypoint": "index.html",

@@ -4,7 +4,7 @@
   "description": "Calculate something precisely",
   "icons": [
     {
-      "src": "/calculator/icon-512x512.png"
+      "src": "icon-512x512.png"
     }
   ],
   "entrypoint": "index.html",
