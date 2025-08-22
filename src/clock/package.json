@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@web-applets/sdk": "file:../../../../web-applets/sdk"
+  },
+  "devDependencies": {
+    "vite": "^5.4.9",
+    "vite-plugin-svgr": "^4.2.0"
+  }
+}
